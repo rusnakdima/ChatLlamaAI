@@ -1,0 +1,34 @@
+[package]
+name = "chatllamaai"
+version = "0.0.1"
+description = "Chat Llama AI"
+authors = ["Dmitriy303"]
+license = "MIT License"
+repository = "https://github.com/rusnakdima/ChatLlamaAI"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "chatllamaai_lib"
+crate-type = ["lib", "cdylib", "staticlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.0.0-rc", features = [] }
+
+[dependencies]
+tauri = { version = "2.0.0-rc", features = [] }
+tauri-plugin-shell = "2.0.0-rc"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tauri-plugin-http = "2.0.0-rc.1"
+opener = "0.7.2"
+http = "1.1.0"
+mongodb = "3.1.0"
+jsonwebtoken = "9.3.0"
+bcrypt = "0.15.1"
+uuid = "1.10.0"
+chrono = "0.4.38"
+lettre = "0.11.8"
+lettre_email = "0.9.4"
+

@@ -1,0 +1,21 @@
+<div class="sticky flex flex-col justify-between items-center p-5 z-10 -mt-[70px] h-screen">
+  <div></div>
+
+  <div class="flex flex-col justify-center items-center">
+    <img class="rounded-full w-20 h-20" src="/assets/images/icon.png" alt="icon">
+  </div>
+
+  <div class="flex flex-row justify-between items-center gap-x-3 px-2 !rounded-full styleElem w-full md:w-10/12 lg:w-3/4 xl:w-2/3">
+    <button class="flex flex-col items-center">
+      <ion-icon name="attach-outline" />
+    </button>
+    <textarea class="styleTextarea !border-none" rows="2" placeholder="Message Llama AI"></textarea>
+    <button class="flex flex-col items-center">
+      <ion-icon name="send-outline" />
+    </button>
+  </div>
+</div>
+
+<app-window-notify
+  [dataNotify]="dataNotify"
+></app-window-notify>

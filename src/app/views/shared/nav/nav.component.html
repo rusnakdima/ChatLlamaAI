@@ -1,0 +1,36 @@
+<div class="relative flex flex-col justify-between gap-y-3 p-5 !rounded-none styleBorderSolidLite border-r w-[250px] h-full">
+  <button class="flex flex-col justify-center items-center styleBorderSolidLite border styleLinkMenu w-full text-center" [routerLink]="['/']">
+    <img src="/assets/images/icon.png" alt="logo" class="rounded-xl w-10 h-10">
+    <span class="text-lg">New chat</span>
+  </button>
+
+  <div class="flex flex-col gap-y-3 overflow-y-auto">
+    @for (chat of listChats; track chat; let i = $index) {
+      @if (chat) {
+        <div class="flex flex-col p-1">
+          <span>{{chat.createdAt}}</span>
+        </div>
+
+        <button class="flex flex-col items-center p-3 styleBorderSolidLite border styleLinkMenu w-full text-center" [routerLink]="['/chat/' + chat.id]">
+          <span class="text-lg">{{chat.title}}</span>
+        </button>
+      } @else {
+        @if (i % 4 == 0) {
+          <div class="p-1 rounded-xl bg-gray-400 dark:bg-gray-700 w-28 animate-pulse"></div>
+        }
+        <div class="flex flex-col items-center p-3 styleBorderSolidLite border styleLinkMenu w-full animate-pulse">
+          @if (i % 3 == 0) {
+            <div class="rounded-xl bg-gray-400 dark:bg-gray-700 w-28 h-5"></div>
+          } @else {
+            <div class="rounded-xl bg-gray-400 dark:bg-gray-700 w-20 h-5"></div>
+          }
+        </div>
+      }
+    }
+  </div>
+
+  <button class="flex flex-col justify-center items-center styleBorderSolidLite border styleLinkMenu w-full text-center" [routerLink]="['/about']">
+    <ion-icon name="information-outline" />
+    <span class="text-lg">About</span>
+  </button>
+</div>

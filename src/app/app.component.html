@@ -1,0 +1,14 @@
+@if (['/login', '/signup', '/reset_password', '/change_password'].indexOf(url) != -1) {
+  <router-outlet></router-outlet>
+} @else {
+  <div class="flex flex-row w-full h-full">
+    @if (isShowNav) {
+      <app-nav></app-nav>
+    }
+
+    <div class="flex flex-col w-full">
+      <app-header (isShowNavEvent)="showNav($event)"></app-header>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+}
