@@ -82,9 +82,8 @@ export class ResetPasswordComponent {
         .then((data: Response) => {
           this.dataNotify.next({ status: data.status, text: data.message });
           if (data.status == "success" && data.data != '') {
-            const parseData = JSON.parse(data.data);
             setTimeout(() => {
-              document.location.href = `/change_password?username=${parseData['username']}&token=${parseData['token']}`;
+              document.location.href = `/change_password?username=${data.data['username']}&token=${data.data['token']}`;
             }, 500);
           }
         })
