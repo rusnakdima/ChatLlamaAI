@@ -31,7 +31,7 @@ pub async fn get_user_by_id(userid: String) -> (Response, Option<UserData>) {
           Response {
             status: "success".to_string(),
             message: "".to_string(),
-            data: user_doc.get_str("id").unwrap().to_string().clone(),
+            data: serde_json::to_string(&user_data).unwrap(),
           },
           Some(user_data)
         )
