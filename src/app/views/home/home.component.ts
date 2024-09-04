@@ -66,7 +66,7 @@ export class HomeComponent implements OnInit {
 
     let chatForm: Chat = {
       id: "",
-      title: `${this.inputMessage.slice(0, 25)}${this.inputMessage.length > 25 ? '...' : ''}`,
+      title: `${this.inputMessage.slice(0, 25)}${this.inputMessage.length > 15 ? '...' : ''}`,
       userId: this.userId,
       createdAt: new Date().toISOString(),
       isPublic: false,
