@@ -200,10 +200,44 @@ pub async fn send_message(message_form: Message) -> Response {
 
   match message_result {
     Ok(_) => {
+      let (_, user_result): (Response, Option<UserData>) = get_user_by_id(message_form.userId.clone()).await;
+      let mut user: UserData;
+
+      if let Some(user_data) = user_result {
+        user = user_data;
+      } else {
+        return Response {
+          status: "error".to_string(),
+          message: "User not found!".to_string(),
+          data: "".to_string(),
+        }
+      }
+
+      let (_, chat_result): (Response, Option<Chat>) = get_chat_by_id(message_form.chatId.clone()).await;
+      let mut chat: Chat;
+
+      if let Some(chat_data) = chat_result {
+        chat = chat_data;
+      } else {
+        return Response {
+          status: "error".to_string(),
+          message: "Chat not found!".to_string(),
+          data: "".to_string(),
+        }
+      }
+
+      let message_full: MessageFull = MessageFull {
+        id: message_form.id.clone(),
+        chat: chat.clone(),
+        content: message_form.content.clone(),
+        user: user.clone(),
+        createdAt: message_form.createdAt.clone(),
+      };
+
       return Response {
         status: "success".to_string(),
         message: "".to_string(),
-        data: serde_json::to_string(&message_doc.clone()).unwrap(),
+        data: serde_json::to_string(&message_full.clone()).unwrap(),
       }
     },
     Err(e) => {
