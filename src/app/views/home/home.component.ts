@@ -8,6 +8,7 @@ import { Subject } from "rxjs";
 /* services */
 import { AuthService } from "@services/auth.service";
 import { ChatsService } from "@services/chats.service";
+import { EventService } from "@services/event.service";
 
 /* models */
 import { Response } from "@models/response";
@@ -19,7 +20,6 @@ import {
   INotify,
   WindowNotifyComponent,
 } from "@views/shared/window-notify/window-notify.component";
-import { EventService } from "@services/event.service";
 
 @Component({
   selector: "app-home",
