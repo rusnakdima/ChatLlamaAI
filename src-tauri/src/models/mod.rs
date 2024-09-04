@@ -5,6 +5,10 @@ pub mod reset_form;
 
 pub mod chat;
 pub mod message;
+pub mod message_full;
 pub mod public_chat;
+
+pub mod ai_history;
+pub mod ai_request;
 
 pub mod response;
