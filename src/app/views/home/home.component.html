@@ -9,8 +9,8 @@
     <button class="flex flex-col items-center">
       <ion-icon name="attach-outline" />
     </button>
-    <textarea class="styleTextarea !border-none" rows="2" placeholder="Message Llama AI"></textarea>
-    <button class="flex flex-col items-center">
+    <textarea class="styleTextarea !border-none" rows="2" placeholder="Message Llama AI" [(ngModel)]="inputMessage"></textarea>
+    <button class="flex flex-col items-center" (click)="sendMessage()">
       <ion-icon name="send-outline" />
     </button>
   </div>

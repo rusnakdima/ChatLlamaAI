@@ -4,11 +4,13 @@ use mongodb::{Collection, Database};
 use uuid::Uuid;
 
 /* models */
-use crate::models::auth_form::AuthForm;
-use crate::models::reg_form::RegForm;
-use crate::models::reset_form::ResetForm;
-use crate::models::response::Response;
-use crate::models::user_data::UserData;
+use crate::models::{
+  auth_form::AuthForm,
+  reg_form::RegForm,
+  reset_form::ResetForm,
+  response::Response,
+  user_data::UserData
+};
 
 /* services */
 use super::manage_token;
@@ -104,6 +106,7 @@ pub async fn signup(auth_form: &RegForm) -> Response {
           "image": "/assets/images/user.png".to_string(),
           "resetToken": "".to_string(),
         }).await;
+
         if let Ok(_) = result {
           return Response {
             status: "success".to_string(),
@@ -154,21 +157,33 @@ pub async fn reset_password(email: String) -> Response {
           "resetToken": reset_token.clone()
         };
 
-        let _ = coll.update_one(
+        let result = coll.update_one(
           doc! { "id": user_doc.get_str("id").unwrap().to_string() },
           doc! { "$set": new_user }
         ).await;
 
-        let res_form: ResetForm = ResetForm {
-          username: user_doc.get_str("username").unwrap().to_string(),
-          token: reset_token.to_string().clone()
-        };
+        match result {
+          Ok(_) => {
+            let res_form: ResetForm = ResetForm {
+              username: user_doc.get_str("username").unwrap().to_string(),
+              token: reset_token.to_string().clone()
+            };
 
-        return Response {
-          status: "success".to_string(),
-          message: "The password reset request has been successfully completed!".to_string(),
-          data: serde_json::to_string(&res_form).unwrap(),
-        };
+            return Response {
+              status: "success".to_string(),
+              message: "The password reset request has been successfully completed!".to_string(),
+              data: serde_json::to_string(&res_form).unwrap(),
+            };
+          }
+          Err(_) => {
+            return Response {
+              status: "error".to_string(),
+              message: "The password reset request could not be processed!".to_string(),
+              data: "".to_string(),
+            };
+          }
+        }
+
       } else {
         return Response {
           status: "error".to_string(),
@@ -272,16 +287,27 @@ pub async fn change_password(username: String, password: String, token: String) 
               "image": user_doc.get_str("image").unwrap().to_string(),
               "resetToken": "".to_string()
             };
-            let _ = coll.update_one(
+            let result = coll.update_one(
               doc! { "username": username.clone() },
               doc! { "$set": new_user },
             ).await;
 
-            return Response {
-              status: "success".to_string(),
-              message: "Password has been successfully changed!".to_string(),
-              data: "".to_string(),
-            };
+            match result {
+              Ok(_) => {
+                return Response {
+                  status: "success".to_string(),
+                  message: "Password has been successfully changed!".to_string(),
+                  data: "".to_string(),
+                };
+              }
+              Err(_) => {
+                return Response {
+                  status: "error".to_string(),
+                  message: "Password change failed!".to_string(),
+                  data: "".to_string(),
+                };
+              }
+            }
           }
         } else {
           return Response {

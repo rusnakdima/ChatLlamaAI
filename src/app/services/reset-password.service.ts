@@ -13,6 +13,6 @@ export class ResetPasswordService {
 
   async sendRequest(email: string): Promise<Response> {
     const rawRes = (await invoke("reset_password", { email: email })) as string;
-    return Response.fromJson(JSON.parse(rawRes));
+    return Response.fromJson(JSON.parse(rawRes), true);
   }
 }

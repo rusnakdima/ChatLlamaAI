@@ -4,16 +4,40 @@
     <span class="text-lg">New chat</span>
   </button>
 
-  <div class="flex flex-col gap-y-3 overflow-y-auto">
+  <div class="flex flex-col h-full overflow-y-auto">
     @for (chat of listChats; track chat; let i = $index) {
       @if (chat) {
-        <div class="flex flex-col p-1">
-          <span>{{chat.createdAt}}</span>
-        </div>
+        <div class="flex flex-col justify-center">
+          <div class="flex flex-col p-1">
+            @if (listChats[i-1] != undefined) {
+              @if (formatDate(listChats[i-1]!.createdAt) != formatDate(chat.createdAt)) {
+                <span class="text-sm text-gray-700 dark:text-gray-400 mt-3">{{formatDate(chat.createdAt)}}</span>
+              }
+            } @else {
+              <span class="text-sm text-gray-700 dark:text-gray-400">{{formatDate(chat.createdAt)}}</span>
+            }
+          </div>
 
-        <button class="flex flex-col items-center p-3 styleBorderSolidLite border styleLinkMenu w-full text-center" [routerLink]="['/chat/' + chat.id]">
-          <span class="text-lg">{{chat.title}}</span>
-        </button>
+          <button class="flex flex-col justify-between items-center styleBorderSolidLite border styleLinkMenu w-full text-center"
+                  [routerLink]="['/chat/' + chat.id]">
+            <span class="text-lg">{{chat.title}}</span>
+            <button class="flex flex-col items-center" [matMenuTriggerFor]="matOptionsMenu">
+              <ion-icon class="!text-xl" name="ellipsis-horizontal-outline" />
+            </button>
+            <mat-menu #matOptionsMenu="matMenu">
+              <div class="flex flex-col p-2">
+                <button class="styleLinkMenu" (click)="tempShareChat = chat; isShowShareWindow = true">
+                  <ion-icon class="!text-xl" name="arrow-redo-outline" />
+                  <span>Share</span>
+                </button>
+                <button class="styleLinkMenu" (click)="deleteChat(chat.id)">
+                  <ion-icon class="!text-xl text-red-500" name="trash-outline" />
+                  <span class="text-red-500">Delete</span>
+                </button>
+              </div>
+            </mat-menu>
+          </button>
+        </div>
       } @else {
         @if (i % 4 == 0) {
           <div class="p-1 rounded-xl bg-gray-400 dark:bg-gray-700 w-28 animate-pulse"></div>
@@ -29,8 +53,17 @@
     }
   </div>
 
-  <button class="flex flex-col justify-center items-center styleBorderSolidLite border styleLinkMenu w-full text-center" [routerLink]="['/about']">
-    <ion-icon name="information-outline" />
+  <button class="flex flex-col items-center styleBorderSolidLite border styleLinkMenu w-full text-center" [routerLink]="['/about']">
+    <ion-icon class="text-xl" name="information-outline" />
     <span class="text-lg">About</span>
   </button>
 </div>
+
+@if (isShowShareWindow) {
+  <app-share-window
+    [chat]="tempShareChat"
+    (shareChatEvent)="shareChat($event)"
+    (closeChatEvent)="closeChat($event)"
+    (closeWindowEvent)="isShowShareWindow = false"
+  ></app-share-window>
+}

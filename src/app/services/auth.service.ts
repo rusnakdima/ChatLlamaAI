@@ -68,15 +68,15 @@ export class AuthService {
   getValueByKey(key: string) {
     const token = this.getToken();
     if (token && token != "") {
-      const decoded: { [key: string]: any } | null =
+      const decoded: string | null =
         this.jwtHelper.decodeToken(token);
-      if (decoded) {
-        return decoded[key];
-      } else {
-        return null;
+      if (decoded){
+        const decodedParse = JSON.parse(decoded);
+        if (decodedParse) {
+          return decodedParse[key];
+        }
       }
-    } else {
-      return null;
     }
+    return null;
   }
 }

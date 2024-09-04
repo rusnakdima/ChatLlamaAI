@@ -1,9 +1,8 @@
-export class Chat {
+export class PublicChat {
   constructor(
     public id: string,
-    public title: string,
     public userId: string,
+    public chatId: string,
     public createdAt: string,
-    public isPublic: boolean,
   ) {}
 }

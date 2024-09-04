@@ -1,24 +1,52 @@
 /* system libraries */
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { CommonModule } from "@angular/common";
+import { HttpClientModule } from "@angular/common/http";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from "@angular/core";
+import { Router, RouterModule } from "@angular/router";
+import { Subject } from "rxjs";
+
+/* materials */
+import { MatMenuModule } from "@angular/material/menu";
+
+/* services */
+import { AuthService } from "@services/auth.service";
+import { ChatsService } from "@services/chats.service";
 
 /* models */
-import { Chat } from '@models/chat';
+import { Response } from "@models/response";
+import { Chat } from "@models/chat";
 
 /* components */
-import { WindowNotifyComponent } from '../window-notify/window-notify.component';
+import { ShareWindowComponent } from "./share-window/share-window.component";
+import {
+  INotify,
+  WindowNotifyComponent,
+} from "../window-notify/window-notify.component";
+import { EventService } from "@services/event.service";
 
 @Component({
-  selector: 'app-nav',
+  selector: "app-nav",
   standalone: true,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [CommonModule, HttpClientModule, RouterModule, WindowNotifyComponent],
-  templateUrl: './nav.component.html'
+  imports: [
+    CommonModule,
+    HttpClientModule,
+    RouterModule,
+    MatMenuModule,
+    ShareWindowComponent,
+    WindowNotifyComponent,
+  ],
+  templateUrl: "./nav.component.html",
 })
 export class NavComponent {
-  constructor() {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private chatsService: ChatsService,
+    private eventService: EventService,
+  ) {}
+
+  dataNotify: Subject<INotify> = new Subject();
 
   listChats: Array<Chat> | Array<null> = [
     null,
@@ -35,9 +63,129 @@ export class NavComponent {
     null,
   ];
 
+  userId: string = "";
+  role: string = "";
+
+  tempShareChat: Chat | null = null;
+
+  isShowShareWindow: boolean = false;
+
   ngOnInit(): void {
-    // Fetch list of chats from your API or local storage
-    // For example:
-    // this.httpClient.get<Array<Chat>>(`https://api.example.com/chats`).subscribe(chats => this.listChats = chats);
+    this.userId = this.authService.getValueByKey("id") ?? "";
+    this.role = this.authService.getValueByKey("role") ?? "user";
+
+    this.eventService.listenRefresh$.subscribe(() => this.refresh() );
+
+    this.refresh();
+  }
+
+  refresh() {
+    this.chatsService
+      .getChatsByUserId(this.userId)
+      .then((data: Response) => {
+        this.dataNotify.next({ status: data.status, text: data.message });
+        if (data.status == "success") {
+          this.listChats = data.data as Array<Chat>;
+          this.sort();
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        this.dataNotify.next({
+          status: "error",
+          text: `${
+            this.role === "admin"
+              ? err.status + " — " + err.message
+              : "Server error!"
+          }`,
+        });
+      });
+  }
+
+  formatDate(date: string) {
+    return new Date(date).toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  }
+
+  sort() {
+    this.listChats.sort((a, b) =>
+      new Date(a!.createdAt).getTime() > new Date(b!.createdAt).getTime()
+        ? -1
+        : 1
+    );
+  }
+
+  shareChat(chatId: string) {
+    if (chatId != '') {
+      this.chatsService
+        .shareChat(chatId)
+        .then((data: Response) => {
+          this.dataNotify.next({ status: data.status, text: data.message });
+          if (data.status == "success") {
+            this.tempShareChat!.isPublic = true;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.dataNotify.next({
+            status: "error",
+            text: `${
+              this.role === "admin"
+                ? err.status + " — " + err.message
+                : "Server error!"
+            }`,
+          });
+        });
+    }
+  }
+
+  closeChat(chatId: string) {
+    if (chatId != '') {
+      this.chatsService
+        .closeChat(chatId)
+        .then((data: Response) => {
+          this.dataNotify.next({ status: data.status, text: data.message });
+          if (data.status == "success") {
+            this.tempShareChat!.isPublic = false;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.dataNotify.next({
+            status: "error",
+            text: `${
+              this.role === "admin"
+                ? err.status + " — " + err.message
+                : "Server error!"
+            }`,
+          });
+        });
+    }
+  }
+
+  deleteChat(chatId: string) {
+    this.chatsService
+      .deleteChat(chatId)
+      .then((data: Response) => {
+        this.dataNotify.next({ status: data.status, text: data.message });
+        if (data.status === "success") {
+          this.refresh();
+          this.router.navigate(['/']);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        this.dataNotify.next({
+          status: "error",
+          text: `${
+            this.role === "admin"
+              ? err.status + " — " + err.message
+              : "Server error!"
+          }`,
+        });
+      });
   }
 }

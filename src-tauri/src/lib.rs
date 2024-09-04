@@ -17,6 +17,16 @@ use controllers::auth::{
     change_password
 };
 
+use controllers::chats::{
+    get_chats_by_userid,
+    get_chat_messages,
+    create_chat,
+    send_message,
+    share_chat,
+    close_chat,
+    delete_chat
+};
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -30,6 +40,14 @@ pub fn run() {
 
             download_update,
             get_binary_name_file,
+
+            get_chats_by_userid,
+            get_chat_messages,
+            create_chat,
+            send_message,
+            share_chat,
+            close_chat,
+            delete_chat,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

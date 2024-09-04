@@ -1,0 +1,29 @@
+<div class="styleBackWind">
+  <div class="styleWind !p-0">
+    <div class="flex flex-col p-5 !rounded-none styleBorderSolidLite border-b">
+      <span class="font-bold text-xl">Setting up public access to the chat</span>
+    </div>
+
+    <div class="flex flex-col gap-y-3 p-5">
+      @if (chat?.isPublic) {
+        <div class="flex flex-row justify-center items-center gap-x-3 p-5 styleElem">
+          <span>{{chat?.id}}</span>
+          <ion-icon class="!text-2xl" name="copy-outline" />
+        </div>
+      } @else {
+        <div class="flex flex-col items-center">
+          <span>The chat is closed to the public!</span>
+        </div>
+      }
+    </div>
+
+    <div class="flex flex-row justify-end gap-x-5 p-5 styleBorderSolid border-t">
+      <button class="styleButDanger" (click)="closeWindowEvent.next('')">Close</button>
+      @if (!chat?.isPublic) {
+        <button class="styleButInfo" (click)="shareChat()">Open Chat to Public</button>
+      } @else {
+        <button class="styleButInfo" (click)="closeChat()">Close Chat from Public</button>
+      }
+    </div>
+  </div>
+</div>

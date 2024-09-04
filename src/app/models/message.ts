@@ -1,8 +1,9 @@
 export class Message {
   constructor(
     public id: string,
+    public chatId: string,
     public content: string,
-    public sender: string,
-    public timestamp: Date,
+    public userId: string,
+    public createdAt: string,
   ) {}
 }

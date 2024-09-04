@@ -4,9 +4,6 @@ import { CommonModule } from "@angular/common";
 import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
 import { filter } from "rxjs";
 
-/* services */
-import { AuthService } from "@services/auth.service";
-
 /* components */
 import { HeaderComponent } from "@views/shared/header/header.component";
 import { NavComponent } from "@views/shared/nav/nav.component";
@@ -20,7 +17,6 @@ import { NavComponent } from "@views/shared/nav/nav.component";
 export class AppComponent implements OnInit {
   constructor(
     private router: Router,
-    private authService: AuthService
   ) {}
 
   url: string = "";
