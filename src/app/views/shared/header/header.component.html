@@ -4,9 +4,32 @@
     <span class="font-medium text-xl">Llama AI</span>
   </div>
 
-  @if (themeVal == '') {
-    <ion-icon class="cursor-pointer" name="sunny-outline" (click)="setTheme('dark')" />
-  } @else if (themeVal == 'dark') {
-    <ion-icon class="cursor-pointer" name="moon-outline" (click)="setTheme('')" />
-  }
+  <div class="flex flex-row gap-x-2 justify-center items-center">
+    @if (themeVal == '') {
+      <ion-icon class="cursor-pointer" name="sunny-outline" (click)="setTheme('dark')" />
+    } @else if (themeVal == 'dark') {
+      <ion-icon class="cursor-pointer" name="moon-outline" (click)="setTheme('')" />
+    }
+
+    <button [matMenuTriggerFor]="matMenuUser">
+      <img class="!rounded-full styleBorderSolidLite border w-10 h-10" [src]="image" alt="logo">
+    </button>
+    <mat-menu #matMenuUser="matMenu">
+      <div class="flex flex-col p-2">
+        <div class="flex flex-col items-center">
+          <span>{{username}}</span>
+          <span class="text-gray-700 dark:text-gray-400">{{role}}</span>
+        </div>
+        <hr class="my-2 styleBorderSolidLite border" />
+        <div class="styleLinkMenu" [routerLink]="['/shared_links']">
+          <ion-icon class="!text-2xl" name="share-social-outline" />
+          <span>Shared Links</span>
+        </div>
+        <button class="styleLinkMenu !text-red-500" (click)="logout()">
+          <ion-icon class="!text-2xl" name="log-out-outline" />
+          <span>Logout</span>
+        </button>
+      </div>
+    </mat-menu>
+  </div>
 </div>
