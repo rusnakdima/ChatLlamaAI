@@ -6,4 +6,14 @@ export class Message {
     public userId: string,
     public createdAt: string,
   ) {}
+
+  public static fromJson(json: any): Message {
+    return new Message(
+      json.id,
+      json.chatId,
+      json.content,
+      json.userId,
+      json.createdAt,
+    );
+  }
 }
