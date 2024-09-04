@@ -20,12 +20,17 @@ use controllers::auth::{
 use controllers::chats::{
     get_chats_by_userid,
     get_chat_messages,
+    get_chat_by_id,
     create_chat,
     send_message,
     share_chat,
     close_chat,
     delete_chat
 };
+
+use controllers::ai::ask_ai;
+
+use controllers::users::get_user_by_id;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -43,11 +48,16 @@ pub fn run() {
 
             get_chats_by_userid,
             get_chat_messages,
+            get_chat_by_id,
             create_chat,
             send_message,
             share_chat,
             close_chat,
             delete_chat,
+
+            ask_ai,
+
+            get_user_by_id,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
