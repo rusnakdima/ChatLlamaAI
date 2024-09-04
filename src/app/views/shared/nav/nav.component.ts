@@ -7,6 +7,7 @@ import { Subject } from "rxjs";
 
 /* materials */
 import { MatMenuModule } from "@angular/material/menu";
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 /* services */
 import { AuthService } from "@services/auth.service";
@@ -33,6 +34,7 @@ import { EventService } from "@services/event.service";
     HttpClientModule,
     RouterModule,
     MatMenuModule,
+    MatTooltipModule,
     ShareWindowComponent,
     WindowNotifyComponent,
   ],
