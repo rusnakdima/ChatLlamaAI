@@ -10,5 +10,7 @@ pub mod public_chat;
 
 pub mod ai_history;
 pub mod ai_request;
+pub mod ai_response;
+pub mod ai_message;
 
 pub mod response;

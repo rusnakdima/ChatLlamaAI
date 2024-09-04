@@ -5,13 +5,7 @@ use uuid::Uuid;
 
 /* models */
 use crate::models::{
-  ai_history::AIHistory,
-  ai_request::AIRequest,
-  chat::Chat,
-  message::Message,
-  message_full::MessageFull,
-  response::Response,
-  user_data::UserData
+  ai_history::AIHistory, ai_message::AIMessage, ai_request::AIRequest, ai_response::AIResponse, chat::Chat, message::Message, message_full::MessageFull, response::Response, user_data::UserData
 };
 
 /* services */
@@ -84,8 +78,8 @@ pub async fn ask_ai(userid: String, chatid: String, message: String) -> Response
     .await
     .unwrap();
 
-  let text = match ai_response.status() {
-    StatusCode::OK => ai_response.text().await.unwrap(),
+  let ai_res: AIResponse = match ai_response.status() {
+    StatusCode::OK => serde_json::from_str(&ai_response.text().await.unwrap().as_str()).unwrap(),
     _ => {
       return Response {
         status: "error".to_string(),
@@ -95,10 +89,12 @@ pub async fn ask_ai(userid: String, chatid: String, message: String) -> Response
     }
   };
 
+  let ai_text = ai_res.message.content.to_string();
+
   let message_form: Message = Message {
     id: Uuid::new_v4().to_string(),
     chatId: chatid.clone(),
-    content: text.clone(),
+    content: ai_text.clone(),
     userId: userid.clone(),
     createdAt: chrono::Utc::now().to_string(),
   };
@@ -112,7 +108,7 @@ pub async fn ask_ai(userid: String, chatid: String, message: String) -> Response
   let message_full: MessageFull = MessageFull {
     id: message_form.id.clone(),
     chat: chat.clone(),
-    content: text.clone(),
+    content: ai_text.clone(),
     user: user.clone(),
     createdAt: message_form.createdAt.clone()
   };
