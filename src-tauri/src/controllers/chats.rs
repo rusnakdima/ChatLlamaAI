@@ -20,6 +20,12 @@ pub async fn get_chat_messages(chatid: String) -> String {
 }
 
 #[tauri::command]
+pub async fn get_chat_by_id(chatid: String) -> String {
+  let (res, _): (Response, Option<Chat>) = services::chats::get_chat_by_id(chatid).await;
+  format!("{}", serde_json::to_string(&res).unwrap())
+}
+
+#[tauri::command]
 pub async fn create_chat(chat_form_raw: String) -> String {
   let chat_form: Chat = serde_json::from_str(&chat_form_raw).unwrap();
   let res: Response = services::chats::create_chat(chat_form).await;
