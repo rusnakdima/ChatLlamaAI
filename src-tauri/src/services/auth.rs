@@ -247,10 +247,10 @@ pub async fn check_token(username: String, token: String) -> Response {
         };
       }
     }
-    Err(_) => {
+    Err(e) => {
       return Response {
         status: "error".to_string(),
-        message: "Error!".to_string(),
+        message: format!("Error: {}", e),
         data: "".to_string(),
       };
     }
@@ -324,10 +324,10 @@ pub async fn change_password(username: String, password: String, token: String) 
         };
       }
     }
-    Err(_) => {
+    Err(e) => {
       return Response {
         status: "error".to_string(),
-        message: "Error!".to_string(),
+        message: format!("Error: {}", e),
         data: "".to_string(),
       };
     }
