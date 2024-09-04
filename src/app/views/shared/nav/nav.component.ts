@@ -92,7 +92,7 @@ export class NavComponent {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         this.dataNotify.next({
           status: "error",
           text: `${
@@ -131,7 +131,7 @@ export class NavComponent {
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
           this.dataNotify.next({
             status: "error",
             text: `${
@@ -155,7 +155,7 @@ export class NavComponent {
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
           this.dataNotify.next({
             status: "error",
             text: `${
@@ -179,7 +179,7 @@ export class NavComponent {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         this.dataNotify.next({
           status: "error",
           text: `${

@@ -106,7 +106,7 @@ export class ChangePasswordComponent {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         this.dataNotify.next({
           status: "error",
           text: `${
@@ -149,7 +149,7 @@ export class ChangePasswordComponent {
           }
         })
         .catch((err) => {
-          console.log(err);
+          console.error(err);
           this.dataNotify.next({
             status: "error",
             text: `${
