@@ -1,26 +1,15 @@
-<div class="sticky flex flex-col justify-between p-5 z-10 -mt-[70px] h-screen">
-  <div class="flex flex-col gap-y-3 mt-20 overflow-y-auto" id="blockMessages">
+<div class="sticky flex flex-col justify-between gap-y-3 p-5 z-10 -mt-[70px] h-screen">
+  <div class="flex flex-col gap-y-3 mt-[66px] overflow-y-auto" id="blockMessages">
     @for (message of messages; track message; let i = $index) {
       @if (message) {
-        @if (message.user.id == userId) {
-          <div class="flex flex-col items-end gap-y-2">
-            <div class="flex items-center justify-center">
-              <img class="p-1 !rounded-full styleBorderSolidLite border w-10 h-10" [src]="image" alt="logo">
-            </div>
-            <div class="px-3 py-2 rounded-lg bg-gray-300 dark:bg-gray-700 max-w-full sm:max-w-2/3">
-              <span class="text-wrap">{{message.content}}</span>
-            </div>
+        <div class="flex flex-col gap-y-2" [ngClass]="[message.user.id == userId ? 'items-end' : 'items-start']">
+          <div class="flex items-center justify-center">
+            <img class="p-1 !rounded-full styleBorderSolidLite border w-10 h-10" [src]="message.user.image" alt="logo">
           </div>
-        } @else {
-          <div class="flex flex-col items-start gap-y-2">
-            <div class="flex items-center justify-center">
-              <img class="p-1 !rounded-full styleBorderSolidLite border w-10 h-10" src="/assets/images/icon.png" alt="logo">
-            </div>
-            <div class="px-3 py-2 rounded-lg bg-gray-300 dark:bg-gray-700 max-w-full sm:max-w-2/3">
-              <span class="text-wrap">{{message.content}}</span>
-            </div>
+          <div class="px-3 py-2 rounded-lg bg-gray-300 dark:bg-gray-700 max-w-full sm:max-w-2/3">
+            <span class="text-wrap">{{message.content}}</span>
           </div>
-        }
+        </div>
       } @else {
         @if (i % 2 == 0) {
           <div class="flex flex-col items-end gap-y-2 animate-pulse">
