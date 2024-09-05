@@ -5,18 +5,23 @@ use uuid::Uuid;
 
 /* models */
 use crate::models::{
-  ai_history::AIHistory, ai_message::AIMessage, ai_request::AIRequest, ai_response::AIResponse, chat::Chat, message::Message, message_full::MessageFull, response::Response, user_data::UserData
+  ai_history::AIHistory,
+  ai_request::AIRequest,
+  ai_response::AIResponse,
+  chat::Chat,
+  message::Message,
+  message_full::MessageFull,
+  response::Response,
+  user_data::UserData
 };
 
 /* services */
-use super::{
-  chats::{
-    get_chat_by_id,
-    get_chat_messages,
-    send_message
-  },
-  users::get_user_by_id
+use super::chats::{
+  get_chat_by_id,
+  get_chat_messages,
 };
+use super::messages::send_message;
+use super::users::get_user_by_id;
 
 pub async fn ask_ai(userid: String, chatid: String, message: String) -> Response {
   let (_, user_result): (Response, Option<UserData>) = get_user_by_id("80c9c4a6-9046-44e7-ba54-73d285ed8c78".to_string()).await;
@@ -95,7 +100,7 @@ pub async fn ask_ai(userid: String, chatid: String, message: String) -> Response
     id: Uuid::new_v4().to_string(),
     chatId: chatid.clone(),
     content: ai_text.clone(),
-    userId: userid.clone(),
+    userId: user.id.clone(),
     createdAt: chrono::Utc::now().to_string(),
   };
 

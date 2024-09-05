@@ -22,10 +22,13 @@ use controllers::chats::{
     get_chat_messages,
     get_chat_by_id,
     create_chat,
-    send_message,
     share_chat,
     close_chat,
     delete_chat
+};
+
+use controllers::messages::{
+    send_message,
 };
 
 use controllers::ai::ask_ai;
@@ -50,10 +53,11 @@ pub fn run() {
             get_chat_messages,
             get_chat_by_id,
             create_chat,
-            send_message,
             share_chat,
             close_chat,
             delete_chat,
+
+            send_message,
 
             ask_ai,
 
