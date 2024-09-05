@@ -20,6 +20,7 @@ import {
   INotify,
   WindowNotifyComponent,
 } from "@views/shared/window-notify/window-notify.component";
+import { MessageFull } from "@models/message_full";
 
 @Component({
   selector: "app-home",
@@ -90,7 +91,8 @@ export class HomeComponent implements OnInit {
             .then((data: Response) => {
               if (data.status == "success") {
                 this.inputMessage = "";
-                this.router.navigate(['/chats/' + data.data + '?from=home']);
+                const message: MessageFull = data.data as MessageFull;
+                this.router.navigate(['/chat/' + message.chat.id + '?from=home']);
               } else {
                 this.dataNotify.next({
                   status: "error",
