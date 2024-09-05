@@ -88,9 +88,9 @@ export class HomeComponent implements OnInit {
           this.chatsService
             .sendMessage(messageForm)
             .then((data: Response) => {
-              if (data.status === "success") {
+              if (data.status == "success") {
                 this.inputMessage = "";
-                this.router.navigate(['/chats/' + data.data]);
+                this.router.navigate(['/chats/' + data.data + '?from=home']);
               } else {
                 this.dataNotify.next({
                   status: "error",
@@ -99,7 +99,7 @@ export class HomeComponent implements OnInit {
               }
             })
             .catch((err) => {
-              console.log(err);
+              console.error(err);
               this.dataNotify.next({
                 status: "error",
                 text: `${
@@ -112,7 +112,7 @@ export class HomeComponent implements OnInit {
         }
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         this.dataNotify.next({
           status: "error",
           text: `${
