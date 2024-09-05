@@ -107,18 +107,7 @@ export class ChatComponent implements OnInit {
       if (params["id"]) {
         this.chatId = params["id"];
         this.getChatData();
-
         await new Promise((res) => setTimeout(res, 1000));
-        if (this.chat!.userId != this.userId && !this.chat!.isPublic) {
-          this.dataNotify.next({
-            status: "error",
-            text: "This chat is private! Access to it is prohibited!",
-          });
-          await new Promise((res) => setTimeout(res, 2000));
-          this.router.navigate(["/"]);
-          return;
-        }
-
         this.getMessages(params["id"]);
       }
     });
@@ -134,10 +123,19 @@ export class ChatComponent implements OnInit {
   getChatData() {
     this.chatsService
       .getChatById(this.chatId)
-      .then((data: Response) => {
+      .then(async (data: Response) => {
         this.dataNotify.next({ status: data.status, text: data.message });
         if (data.status === "success") {
           this.chat = data.data as Chat;
+          if (this.chat.userId != this.userId && !this.chat.isPublic) {
+            this.dataNotify.next({
+              status: "error",
+              text: "This chat is private! Access to it is prohibited!",
+            });
+            await new Promise((res) => setTimeout(res, 2000));
+            this.router.navigate(["/"]);
+            return;
+          }
         }
       })
       .catch((err) => {
@@ -160,6 +158,12 @@ export class ChatComponent implements OnInit {
         this.dataNotify.next({ status: data.status, text: data.message });
         if (data.status === "success") {
           this.messages = data.data as Array<MessageFull>;
+          setTimeout(() => {
+            const block = document.getElementById('blockMessages');
+            if (block) {
+              block.scrollTo({ top: block.scrollHeight });
+            }
+          }, 100);
         }
       })
       .catch((err) => {
@@ -197,6 +201,13 @@ export class ChatComponent implements OnInit {
             ; (this.messages as Array<MessageFull>).push(
               MessageFull.fromJson(data.data)
             );
+            this.askAi();
+            setTimeout(() => {
+              const block = document.getElementById('blockMessages');
+              if (block) {
+                block.scrollTo({ top: block.scrollHeight });
+              }
+            }, 100);
           }
         } else {
           this.dataNotify.next({
