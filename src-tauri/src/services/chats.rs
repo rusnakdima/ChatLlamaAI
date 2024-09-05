@@ -227,7 +227,7 @@ pub async fn send_message(message_form: Message) -> Response {
       }
 
       let message_full: MessageFull = MessageFull {
-        id: message_form.id.clone(),
+        id: message_doc.get_str("id").unwrap().to_string().clone(),
         chat: chat.clone(),
         content: message_form.content.clone(),
         user: user.clone(),
