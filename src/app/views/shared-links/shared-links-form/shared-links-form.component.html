@@ -1,0 +1,23 @@
+<div class="styleBackWind">
+  <div class="styleWind !p-0">
+    <div class="p-5 styleBorderSolid border-b">
+      <span class="text-xl">Adding a link to a public chat</span>
+    </div>
+
+    <div class="flex flex-col p-5">
+      <div class="flex flex-col gap-y-1">
+        <label class="styleLabel">Link to the public chat</label>
+        <input class="styleField" type="text" [(ngModel)]="inputLink">
+      </div>
+    </div>
+
+    <div class="flex flex-row justify-end gap-x-5 p-5 styleBorderSolid border-t">
+      <button class="styleButDanger" (click)="closeWindow.next('isShowWindowEdit')">Close</button>
+      <button class="styleButInfo" (click)="onSubmit()">Add</button>
+    </div>
+  </div>
+</div>
+
+<app-window-notify
+  [dataNotify]="dataNotify"
+></app-window-notify>
