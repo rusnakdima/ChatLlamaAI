@@ -5,20 +5,20 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Subject } from "rxjs";
 
 /* models */
+import { Response } from "@models/response";
 import { Chat } from "@models/chat";
+import { PublicChat } from "@models/public_chat";
 
 /* services */
+import { AuthService } from "@services/auth.service";
 import { ChatsService } from "@services/chats.service";
+import { SharedLinksService } from "@services/shared-links.service";
 
 /* components */
 import {
   INotify,
   WindowNotifyComponent,
 } from "@views/shared/window-notify/window-notify.component";
-import { Response } from "@models/response";
-import { AuthService } from "@services/auth.service";
-import { PublicChat } from "@models/public_chat";
-import { PublicChatsService } from "@services/public-chats.service";
 
 @Component({
   selector: "app-shared-links-form",
@@ -37,7 +37,7 @@ export class SharedLinksFormComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private chatsService: ChatsService,
-    private publicChatsService: PublicChatsService
+    private sharedLinksService: SharedLinksService
   ) {}
 
   dataNotify: Subject<INotify> = new Subject();
@@ -99,7 +99,7 @@ export class SharedLinksFormComponent implements OnInit {
             chatId: this.chat.id,
             createdAt: new Date().toISOString(),
           };
-          this.publicChatsService
+          this.sharedLinksService
             .addPublicChat(publicChat)
             .then((data: Response) => {
               this.dataNotify.next({
