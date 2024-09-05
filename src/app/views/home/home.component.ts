@@ -88,11 +88,12 @@ export class HomeComponent implements OnInit {
           };
           this.chatsService
             .sendMessage(messageForm)
-            .then((data: Response) => {
+            .then(async (data: Response) => {
               if (data.status == "success") {
                 this.inputMessage = "";
+                await new Promise(res => setTimeout(res, 2000));
                 const message: MessageFull = data.data as MessageFull;
-                this.router.navigate(['/chat/' + message.chat.id + '?from=home']);
+                this.router.navigate(['/chat/' + message.chat.id], { queryParams: { "from": "home" } });
               } else {
                 this.dataNotify.next({
                   status: "error",

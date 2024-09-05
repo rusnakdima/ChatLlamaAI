@@ -108,7 +108,7 @@ export class ChatComponent implements OnInit {
         this.chatId = params["id"];
         this.getChatData();
         await new Promise((res) => setTimeout(res, 1000));
-        this.getMessages(params["id"]);
+        this.getMessages(this.chatId);
       }
     });
 
@@ -116,6 +116,8 @@ export class ChatComponent implements OnInit {
       if (params["from"] && params["from"] == "home") {
         await new Promise((res) => setTimeout(res, 3000));
         this.askAi();
+        await new Promise((res) => setTimeout(res, 1000));
+        this.router.navigate(['/chat/' + this.chatId]);
       }
     });
   }
