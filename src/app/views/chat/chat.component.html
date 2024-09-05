@@ -1,5 +1,5 @@
 <div class="sticky flex flex-col justify-between p-5 z-10 -mt-[70px] h-screen">
-  <div class="flex flex-col gap-y-3 mt-20 overflow-y-auto">
+  <div class="flex flex-col gap-y-3 mt-20 overflow-y-auto" id="blockMessages">
     @for (message of messages; track message; let i = $index) {
       @if (message) {
         @if (message.user.id == userId) {
@@ -12,7 +12,7 @@
             </div>
           </div>
         } @else {
-          <div class="flex flex-col gap-y-2">
+          <div class="flex flex-col items-start gap-y-2">
             <div class="flex items-center justify-center">
               <img class="p-1 !rounded-full styleBorderSolidLite border w-10 h-10" src="/assets/images/icon.png" alt="logo">
             </div>
