@@ -4,7 +4,6 @@ import { invoke } from "@tauri-apps/api/core";
 
 /* models */
 import { Response } from "@models/response";
-import { Message } from "@models/message";
 
 @Injectable({
   providedIn: "root",
@@ -26,34 +25,11 @@ export class ChatsService {
     return Response.fromJson(JSON.parse(rawRes), true);
   }
 
-  async getChatMessages(chatId: string): Promise<Response> {
-    const rawRes = (await invoke("get_chat_messages", {
-      chatid: chatId,
-    })) as string;
-    return Response.fromJson(JSON.parse(rawRes), true);
-  }
-
   async createChat(chatForm: any): Promise<Response> {
     const rawRes = (await invoke("create_chat", {
       chatFormRaw: JSON.stringify(chatForm),
     })) as string;
     return Response.fromJson(JSON.parse(rawRes));
-  }
-
-  async sendMessage(messageForm: Message): Promise<Response> {
-    const rawRes = (await invoke("send_message", {
-      messageFormRaw: JSON.stringify(messageForm),
-    })) as string;
-    return Response.fromJson(JSON.parse(rawRes), true);
-  }
-
-  async askAI(userId: string, chatId: string, message: string): Promise<Response> {
-    const rawRes = (await invoke("ask_ai", {
-      userid: userId,
-      chatid: chatId,
-      message: message,
-    })) as string;
-    return Response.fromJson(JSON.parse(rawRes), true);
   }
 
   async shareChat(chatid: string): Promise<Response> {

@@ -7,12 +7,14 @@ import { Subject } from "rxjs";
 
 /* services */
 import { AuthService } from "@services/auth.service";
-import { ChatsService } from "@services/chats.service";
 import { UsersService } from "@services/users.service";
+import { ChatsService } from "@services/chats.service";
+import { MessagesService } from "@services/messages.service";
 
 /* models */
 import { Response } from "@models/response";
 import { Chat } from "@models/chat";
+import { Message } from "@models/message";
 import { MessageFull } from "@models/message_full";
 import { User } from "@models/user";
 
@@ -21,7 +23,6 @@ import {
   INotify,
   WindowNotifyComponent,
 } from "@views/shared/window-notify/window-notify.component";
-import { Message } from "@models/message";
 
 @Component({
   selector: "app-chat",
@@ -42,6 +43,7 @@ export class ChatComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private chatsService: ChatsService,
+    private messagesService: MessagesService,
     private usersService: UsersService
   ) {}
 
@@ -154,8 +156,8 @@ export class ChatComponent implements OnInit {
   }
 
   getMessages(chatId: string) {
-    this.chatsService
-      .getChatMessages(chatId)
+    this.messagesService
+      .getMessagesByChatId(chatId)
       .then((data: Response) => {
         this.dataNotify.next({ status: data.status, text: data.message });
         if (data.status === "success") {
@@ -194,7 +196,7 @@ export class ChatComponent implements OnInit {
       createdAt: new Date().toISOString(),
     };
 
-    this.chatsService
+    this.messagesService
       .sendMessage(messageForm)
       .then((data: Response) => {
         if (data.status == "success") {
@@ -242,7 +244,7 @@ export class ChatComponent implements OnInit {
       )
     );
 
-    this.chatsService
+    this.messagesService
       .askAI(
         this.userId,
         this.chatId,

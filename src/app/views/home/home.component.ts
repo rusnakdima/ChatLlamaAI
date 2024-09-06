@@ -8,6 +8,7 @@ import { Subject } from "rxjs";
 /* services */
 import { AuthService } from "@services/auth.service";
 import { ChatsService } from "@services/chats.service";
+import { MessagesService } from "@services/messages.service";
 import { EventService } from "@services/event.service";
 
 /* models */
@@ -39,6 +40,7 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private authService: AuthService,
     private chatsService: ChatsService,
+    private messagesService: MessagesService,
     private eventService: EventService
   ) {}
 
@@ -87,7 +89,7 @@ export class HomeComponent implements OnInit {
             userId: this.userId,
             createdAt: new Date().toISOString(),
           };
-          this.chatsService
+          this.messagesService
             .sendMessage(messageForm)
             .then(async (data: Response) => {
               if (data.status == "success") {

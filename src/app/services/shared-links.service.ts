@@ -26,9 +26,9 @@ export class SharedLinksService {
     return Response.fromJson(JSON.parse(rawRes));
   }
 
-  async deletePublicChat(chatId: string): Promise<Response> {
+  async deletePublicChat(id: string): Promise<Response> {
     const rawRes = (await invoke("delete_public_chat", {
-      chatId: chatId,
+      id: id,
     })) as string;
     return Response.fromJson(JSON.parse(rawRes));
   }
