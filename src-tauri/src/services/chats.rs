@@ -118,6 +118,7 @@ pub async fn create_chat(chat_form: Chat) -> Response {
     "title": chat_form.title.clone(),
     "userId": chat_form.userId.clone(),
     "createdAt": chat_form.createdAt.clone(),
+    "updatedAt": chat_form.updatedAt.clone(),
     "isPublic": chat_form.isPublic.clone(),
   };
 
