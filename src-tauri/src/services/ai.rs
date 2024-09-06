@@ -16,11 +16,11 @@ use crate::models::{
 };
 
 /* services */
-use super::chats::{
-  get_chat_by_id,
-  get_chat_messages,
+use super::chats::get_chat_by_id;
+use super::messages::{
+  get_messages_by_chatid,
+  send_message
 };
-use super::messages::send_message;
 use super::users::get_user_by_id;
 
 pub async fn ask_ai(userid: String, chatid: String, message: String) -> Response {
@@ -50,7 +50,7 @@ pub async fn ask_ai(userid: String, chatid: String, message: String) -> Response
     }
   }
 
-  let messages_res: Response = get_chat_messages(chatid.clone()).await;
+  let messages_res: Response = get_messages_by_chatid(chatid.clone()).await;
 
   let mut messages: Vec<MessageFull> = serde_json::from_str(&messages_res.data.as_str()).unwrap();
 
