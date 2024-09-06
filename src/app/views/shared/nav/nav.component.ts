@@ -120,7 +120,7 @@ export class NavComponent {
   }
 
   truncateString(str: string): string {
-    return Common.truncateString(str, 15);
+    return Common.truncateString(str, 10);
   }
 
   shareChat(chatId: string) {
