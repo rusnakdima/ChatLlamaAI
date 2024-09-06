@@ -1,0 +1,135 @@
+<div class="sticky flex flex-col m-5">
+  <div class="flex flex-row justify-between items-center gap-3 pb-2 !rounded-none styleBorderSolidLite border-b">
+    <button (click)="refresh()" id="refreshBut">
+      <ion-icon class="text-3xl" name="refresh-outline" />
+    </button>
+    <div class="flex flex-row flex-wrap gap-2 justify-end">
+      <app-search
+        [tempArray]="tempListSharedLinks"
+        [searchByFields]="['user.id', 'chat.title']"
+        (array)="searchFunc($event)">
+      </app-search>
+      <button class="styleFloatBut" (click)="addRec()">
+        <ion-icon name="add" class="cursor-pointer !text-2xl"></ion-icon>
+        <span class="hidden sm:block">Add</span>
+      </button>
+      <button class="styleFloatBut" (click)="deleteRecords()">
+        <ion-icon name="trash-bin-outline" class="cursor-pointer !text-2xl" />
+        <span class="hidden sm:block">Delete (selected)</span>
+      </button>
+      <button class="styleFloatBut" (click)="isShowWindFilter = true">
+        <ion-icon name="filter-outline" class="cursor-pointer !text-2xl" />
+        <span class="hidden sm:block">Filter</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="flex flex-col py-5 overflow-y-auto">
+    <div class="flex flex-col gap-y-3">
+      @if (!isLoading) {
+        <div class="flex flex-row justify-between">
+          <div class="flex flex-row items-center gap-x-3 p-1">
+            <input type="checkbox" class="styleCheckbox" (change)="selAll($event)">
+            <span>Select All</span>
+          </div>
+
+          <app-show-item
+            (perItemChanged)="onChangePerItem($event)"
+          ></app-show-item>
+        </div>
+      }
+
+      @for (link of listSharedLinks | paginate : {
+        itemsPerPage: perItem,
+        currentPage: page,
+        totalItems: 0
+      }; track link; let i = $index) {
+        @if (link) {
+          <div class="flex flex-row justify-between items-center gap-y-3 p-3 styleBorderSolidLite border">
+            <div class="flex flex-row items-center gap-x-3">
+              <div class="flex flex-col justify-center items-center p-1">
+                <input type="checkbox" class="styleCheckbox" [id]="['checkbox'+i]" (change)="selRec(link.id, $event)" [checked]="selectedRecords.includes(link.id)">
+              </div>
+              <span class="text-lg">{{i+1}}</span>
+
+              <div class="flex flex-col gap-y-5">
+                <span class="font-bold">{{truncateString(link.chat.title)}}</span>
+
+                <div class="flex flex-row flex-wrap gap-5">
+                  <div class="flex flex-col gap-y-2">
+                    <span class="text-sm textMuted">Owner</span>
+                    <span class="textMuted">{{link.user.id}}</span>
+                  </div>
+                  <div class="flex flex-col gap-y-2">
+                    <span class="text-sm textMuted">Added at</span>
+                    <span class="textMuted">{{formatDate(link.createdAt)}}</span>
+                  </div>
+                  <div class="flex flex-col gap-y-2">
+                    <span class="text-sm textMuted">Is public</span>
+                    <span class="textMuted">{{link.chat.isPublic ? 'Yes' : 'No'}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-row flex-wrap justify-end gap-3">
+              <button class="styleFloatBut" [routerLink]="['/chat/' + link.chat.id]">
+                <ion-icon class="!text-2xl" name="arrow-forward-circle-outline" />
+              </button>
+              <button class="styleFloatBut">
+                <ion-icon class="!text-2xl" name="trash-outline" />
+              </button>
+            </div>
+          </div>
+        } @else {
+          @if (isLoading) {
+            <div class="flex flex-row justify-between items-center gap-y-3 p-3 styleBorderSolidLite border animate-pulse">
+              <div class="flex flex-row items-center gap-x-3">
+                <div class="rounded-xl bg-gray-500 w-4 h-7"></div>
+
+                <div class="flex flex-col gap-y-5">
+                  <div class="rounded-xl bg-gray-500 w-32 h-3"></div>
+
+                  <div class="flex flex-col min-[500px]:flex-row gap-y-5 min-[500px]:gap-x-10">
+                    <div class="rounded-xl bg-gray-500 w-32 h-3"></div>
+                    <div class="rounded-xl bg-gray-500 w-32 h-3"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-xl bg-gray-500 w-7 h-7"></div>
+            </div>
+          }
+        }
+      }
+
+      @if (!isLoading) {
+        <app-pagination
+          [array]="listSharedLinks"
+          [perItem]="perItem"
+          (onChange)="onTableDataChange($event)">
+        </app-pagination>
+      }
+
+      @if (!isLoading && listSharedLinks.length == 0) {
+        <div class="flex flex-col items-center">
+          <span class="text-3xl">No links found!</span>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+@if (isShowWindowEdit) {
+  <app-shared-links-form
+    (closeWindow)="closeWindow($event)"
+  ></app-shared-links-form>
+}
+
+@if (isShowWindFilter) {
+  <span></span>
+}
+
+<app-window-notify
+  [dataNotify]="dataNotify">
+</app-window-notify>

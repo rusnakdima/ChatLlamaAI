@@ -7,7 +7,10 @@ import { Subject } from "rxjs";
 
 /* materials */
 import { MatMenuModule } from "@angular/material/menu";
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTooltipModule } from "@angular/material/tooltip";
+
+/* helpers */
+import { Common } from "@helpers/common";
 
 /* services */
 import { AuthService } from "@services/auth.service";
@@ -45,7 +48,7 @@ export class NavComponent {
     private router: Router,
     private authService: AuthService,
     private chatsService: ChatsService,
-    private eventService: EventService,
+    private eventService: EventService
   ) {}
 
   dataNotify: Subject<INotify> = new Subject();
@@ -76,7 +79,7 @@ export class NavComponent {
     this.userId = this.authService.getValueByKey("id") ?? "";
     this.role = this.authService.getValueByKey("role") ?? "user";
 
-    this.eventService.listenRefresh$.subscribe(() => this.refresh() );
+    this.eventService.listenRefresh$.subscribe(() => this.refresh());
 
     this.refresh();
   }
@@ -104,14 +107,6 @@ export class NavComponent {
       });
   }
 
-  formatDate(date: string) {
-    return new Date(date).toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  }
-
   sort() {
     this.listChats.sort((a, b) =>
       new Date(a!.createdAt).getTime() > new Date(b!.createdAt).getTime()
@@ -120,8 +115,16 @@ export class NavComponent {
     );
   }
 
+  formatDate(date: string) {
+    return Common.formatLocaleDate(date);
+  }
+
+  truncateString(str: string): string {
+    return Common.truncateString(str, 15);
+  }
+
   shareChat(chatId: string) {
-    if (chatId != '') {
+    if (chatId != "") {
       this.chatsService
         .shareChat(chatId)
         .then((data: Response) => {
@@ -145,7 +148,7 @@ export class NavComponent {
   }
 
   closeChat(chatId: string) {
-    if (chatId != '') {
+    if (chatId != "") {
       this.chatsService
         .closeChat(chatId)
         .then((data: Response) => {
@@ -175,7 +178,7 @@ export class NavComponent {
         this.dataNotify.next({ status: data.status, text: data.message });
         if (data.status == "success") {
           this.refresh();
-          this.router.navigate(['/']);
+          this.router.navigate(["/"]);
         }
       })
       .catch((err) => {

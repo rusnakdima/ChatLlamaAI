@@ -19,7 +19,6 @@ use controllers::auth::{
 
 use controllers::chats::{
     get_chats_by_userid,
-    get_chat_messages,
     get_chat_by_id,
     create_chat,
     share_chat,
@@ -28,7 +27,14 @@ use controllers::chats::{
 };
 
 use controllers::messages::{
-    send_message,
+    get_messages_by_chatid,
+    send_message
+};
+
+use controllers::public_chat::{
+    get_all_public_chats,
+    add_public_chat,
+    delete_public_chat
 };
 
 use controllers::ai::ask_ai;
@@ -50,14 +56,18 @@ pub fn run() {
             get_binary_name_file,
 
             get_chats_by_userid,
-            get_chat_messages,
             get_chat_by_id,
             create_chat,
             share_chat,
             close_chat,
             delete_chat,
 
+            get_messages_by_chatid,
             send_message,
+
+            get_all_public_chats,
+            add_public_chat,
+            delete_public_chat,
 
             ask_ai,
 

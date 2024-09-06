@@ -7,6 +7,7 @@ pub mod chat;
 pub mod message;
 pub mod message_full;
 pub mod public_chat;
+pub mod public_chat_full;
 
 pub mod ai_history;
 pub mod ai_request;

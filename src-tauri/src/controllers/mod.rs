@@ -4,3 +4,4 @@ pub mod users;
 pub mod chats;
 pub mod messages;
 pub mod ai;
+pub mod public_chat;
