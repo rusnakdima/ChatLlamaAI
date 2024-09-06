@@ -14,13 +14,13 @@ import { EventService } from "@services/event.service";
 import { Response } from "@models/response";
 import { Chat } from "@models/chat";
 import { Message } from "@models/message";
+import { MessageFull } from "@models/message_full";
 
 /* components */
 import {
   INotify,
   WindowNotifyComponent,
 } from "@views/shared/window-notify/window-notify.component";
-import { MessageFull } from "@models/message_full";
 
 @Component({
   selector: "app-home",
@@ -70,6 +70,7 @@ export class HomeComponent implements OnInit {
       title: `${this.inputMessage.slice(0, 12)}${this.inputMessage.length > 12 ? '...' : ''}`,
       userId: this.userId,
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       isPublic: false,
     };
 

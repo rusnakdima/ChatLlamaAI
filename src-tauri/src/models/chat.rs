@@ -7,5 +7,6 @@ pub struct Chat {
   pub title: String,
   pub userId: String,
   pub createdAt: String,
+  pub updatedAt: String,
   pub isPublic: bool,
 }

@@ -13,7 +13,10 @@ use crate::models::{
 
 /* services */
 use super::{
-  chats::get_chat_by_id,
+  chats::{
+    get_chat_by_id,
+    update_date
+  },
   mongodb::connect_db,
   users::get_user_by_id
 };
@@ -33,6 +36,13 @@ pub async fn send_message(message_form: Message) -> Response {
   let message_result = coll
     .insert_one(message_doc.clone())
     .await;
+
+  let result_update_chat = update_date(message_form.chatId.clone(), message_form.createdAt.clone())
+    .await;
+
+  if result_update_chat.status == "error" {
+    return result_update_chat;
+  }
 
   match message_result {
     Ok(_) => {

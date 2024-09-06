@@ -10,11 +10,11 @@
         <div class="flex flex-col justify-center">
           <div class="flex flex-col p-1">
             @if (listChats[i-1] != undefined) {
-              @if (formatDate(listChats[i-1]!.createdAt) != formatDate(chat.createdAt)) {
-                <span class="text-sm text-gray-700 dark:text-gray-400 mt-3">{{formatDate(chat.createdAt)}}</span>
+              @if (formatDate(listChats[i-1]!.updatedAt) != formatDate(chat.updatedAt)) {
+                <span class="text-sm text-gray-700 dark:text-gray-400 mt-3">{{formatDate(chat.updatedAt)}}</span>
               }
             } @else {
-              <span class="text-sm text-gray-700 dark:text-gray-400">{{formatDate(chat.createdAt)}}</span>
+              <span class="text-sm text-gray-700 dark:text-gray-400">{{formatDate(chat.updatedAt)}}</span>
             }
           </div>
 

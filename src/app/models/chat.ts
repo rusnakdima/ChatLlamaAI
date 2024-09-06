@@ -4,6 +4,7 @@ export class Chat {
     public title: string,
     public userId: string,
     public createdAt: string,
+    public updatedAt: string,
     public isPublic: boolean,
   ) {}
 
@@ -13,6 +14,7 @@ export class Chat {
       json.title,
       json.userId,
       json.createdAt,
+      json.updatedAt,
       json.isPublic,
     );
   }

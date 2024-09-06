@@ -8,7 +8,6 @@ use uuid::Uuid;
 /* models */
 use crate::models::{
   chat::Chat,
-  message::Message,
   message_full::MessageFull,
   response::Response,
   user_data::UserData
@@ -39,6 +38,7 @@ pub async fn get_chats_by_userid(userid: String) -> Response {
           title: chat_doc.get_str("title").unwrap().to_string(),
           userId: chat_doc.get_str("userId").unwrap().to_string(),
           createdAt: chat_doc.get_str("createdAt").unwrap().to_string(),
+          updatedAt: chat_doc.get_str("updatedAt").unwrap().to_string(),
           isPublic: chat_doc.get_bool("isPublic").unwrap(),
         };
         chats_vec.push(chat);
@@ -46,7 +46,7 @@ pub async fn get_chats_by_userid(userid: String) -> Response {
 
       return Response {
         status: "success".to_string(),
-        message: "Chats retrieved successfully!".to_string(),
+        message: "".to_string(),
         data: serde_json::to_string(&chats_vec.clone()).unwrap(),
       };
     }
@@ -56,7 +56,7 @@ pub async fn get_chats_by_userid(userid: String) -> Response {
         message: format!("Error: {}", e),
         data: "".to_string(),
       };
-    } 
+    }
   }
 }
 
@@ -117,6 +117,7 @@ pub async fn get_chat_by_id(chat_id: String) -> (Response, Option<Chat>) {
           title: chat_doc.get_str("title").unwrap().to_string(),
           userId: chat_doc.get_str("userId").unwrap().to_string(),
           createdAt: chat_doc.get_str("createdAt").unwrap().to_string(),
+          updatedAt: chat_doc.get_str("updatedAt").unwrap().to_string(),
           isPublic: chat_doc.get_bool("isPublic").unwrap(),
         };
 
@@ -175,14 +176,66 @@ pub async fn create_chat(chat_form: Chat) -> Response {
         message: "Chat created successfully!".to_string(),
         data: chat_doc.get_str("id").unwrap().to_string().clone(),
       }
-    },
+    }
     Err(e) => {
       return Response {
         status: "error".to_string(),
         message: format!("Error: {}", e),
         data: "".to_string(),
       }
-    },
+    }
+  }
+}
+
+pub async fn update_date(chat_id: String, updated_at: String) -> Response {
+  let database: Database = connect_db().await.unwrap();
+  let coll: Collection<Document> = database.collection("chats");
+
+  let chat_result = coll
+    .find_one(doc! { "id": chat_id.clone() })
+    .await;
+
+  match chat_result {
+    Ok(chat) => {
+      if let Some(_) = chat {
+        let result = coll
+          .update_one(
+            doc! { "id": chat_id.clone() },
+            doc! { "$set": { "updatedAt": updated_at } },
+          )
+          .await;
+
+        match result {
+          Ok(_) => {
+            return Response {
+              status: "success".to_string(),
+              message: "".to_string(),
+              data: "".to_string(),
+            }
+          }
+          Err(e) => {
+            return Response {
+              status: "error".to_string(),
+              message: format!("Error: {}", e),
+              data: "".to_string(),
+            }
+          }
+        }
+      } else {
+        return Response {
+          status: "error".to_string(),
+          message: "The chat was not found!".to_string(),
+          data: "".to_string(),
+        }
+      }
+    }
+    Err(e) => {
+      return Response {
+        status: "error".to_string(),
+        message: format!("Error: {}", e),
+        data: "".to_string(),
+      }
+    }
   }
 }
 
@@ -243,7 +296,7 @@ pub async fn close_chat(chat_id: String) -> Response {
 
         return Response {
           status: "success".to_string(),
-          message: "The chat has been successfully opened for public access!".to_string(),
+          message: "The chat has been successfully closed from public access!".to_string(),
           data: "".to_string(),
         };
       } else {

@@ -12,6 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 /* services */
 import { AuthService } from "@services/auth.service";
 import { ChatsService } from "@services/chats.service";
+import { EventService } from "@services/event.service";
 
 /* models */
 import { Response } from "@models/response";
@@ -23,7 +24,6 @@ import {
   INotify,
   WindowNotifyComponent,
 } from "../window-notify/window-notify.component";
-import { EventService } from "@services/event.service";
 
 @Component({
   selector: "app-nav",
@@ -173,7 +173,7 @@ export class NavComponent {
       .deleteChat(chatId)
       .then((data: Response) => {
         this.dataNotify.next({ status: data.status, text: data.message });
-        if (data.status === "success") {
+        if (data.status == "success") {
           this.refresh();
           this.router.navigate(['/']);
         }

@@ -1,7 +1,6 @@
 use crate::{
   models::{
     chat::Chat,
-    message::Message,
     response::Response
   },
   services
