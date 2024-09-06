@@ -1,6 +1,6 @@
 {
   "name": "chatllamaai",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -23,6 +23,7 @@
     "@auth0/angular-jwt": "^5.2.0",
     "@tauri-apps/api": "2.0.0-rc.4",
     "@tauri-apps/plugin-shell": "2.0.0-rc.1",
+    "ngx-pagination": "^6.0.3",
     "rxjs": "~7.8.1",
     "tslib": "^2.7.0",
     "zone.js": "~0.14.10"
