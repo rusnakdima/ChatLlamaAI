@@ -58,7 +58,7 @@ pub async fn ask_ai(userid: String, chatid: String, message: String) -> Response
 
   for message_iter in messages.iter() {
     messages_history.push(AIHistory {
-      role: if message_iter.user.id.clone() == userid.clone() { "user".to_string() } else { "assistant".to_string() },
+      role: if message_iter.user.id.clone() == user.id.clone() { "assistant".to_string() } else { "user".to_string() },
       content: message_iter.content.clone(),
     });
   }
