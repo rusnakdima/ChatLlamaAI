@@ -27,11 +27,11 @@
 }
 
 .styleBackWind {
-  @apply fixed left-0 top-0 m-0 z-[999] bg-white/30 dark:bg-black/30 w-full h-[100vh]
+  @apply fixed flex flex-col items-center left-0 top-0 m-0 z-[999] bg-white/30 dark:bg-black/30 w-full h-[100vh]
 }
 
 .styleWind {
-  @apply absolute top-[25%] left-[25%] p-4 mx-auto rounded-xl styleBorderSolid border bg-white dark:bg-zinc-900 w-1/2
+  @apply absolute top-24 p-4 rounded-xl styleBorderSolid border bg-white dark:bg-zinc-900 w-10/12 sm:w-5/6 md:w-2/3 lg:w-1/2
 }
 
 .styleBorderSolid {
