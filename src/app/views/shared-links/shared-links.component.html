@@ -45,54 +45,57 @@
         totalItems: 0
       }; track link; let i = $index) {
         @if (link) {
-          <div class="flex flex-row justify-between items-center gap-y-3 p-3 styleBorderSolidLite border">
-            <div class="flex flex-row items-center gap-x-3">
-              <div class="flex flex-col justify-center items-center p-1">
-                <input type="checkbox" class="styleCheckbox" [id]="['checkbox'+i]" (change)="selRec(link.id, $event)" [checked]="selectedRecords.includes(link.id)">
+          <div class="flex flex-row !justify-between !items-center gap-y-3 !p-3 styleFloatBut" (click)="openChat($event, link.chat.id)">
+            <div class="flex flex-col gap-y-5">
+              <div class="flex flex-row gap-x-3">
+                <div class="flex flex-col justify-center items-center p-1">
+                  <input type="checkbox" class="styleCheckbox" [id]="['checkbox'+i]" (change)="selRec(link.id, $event)" [checked]="selectedRecords.includes(link.id)">
+                </div>
+
+                <span class="text-xl">{{truncateString(link.chat.title)}}</span>
               </div>
-              <span class="text-lg">{{i+1}}</span>
 
-              <div class="flex flex-col gap-y-5">
-                <span class="font-bold">{{truncateString(link.chat.title)}}</span>
-
-                <div class="flex flex-row flex-wrap gap-5">
-                  <div class="flex flex-col gap-y-2">
-                    <span class="text-sm textMuted">Owner</span>
-                    <span class="textMuted">{{link.user.id}}</span>
-                  </div>
-                  <div class="flex flex-col gap-y-2">
-                    <span class="text-sm textMuted">Added at</span>
-                    <span class="textMuted">{{formatDate(link.createdAt)}}</span>
-                  </div>
-                  <div class="flex flex-col gap-y-2">
-                    <span class="text-sm textMuted">Is public</span>
-                    <span class="textMuted">{{link.chat.isPublic ? 'Yes' : 'No'}}</span>
-                  </div>
+              <div class="flex flex-row flex-wrap gap-5">
+                <div class="flex flex-col gap-y-2">
+                  <span class="text-sm textMuted">Owner</span>
+                  <span>{{link.user.username}}</span>
+                </div>
+                <div class="flex flex-col gap-y-2">
+                  <span class="text-sm textMuted">Added at</span>
+                  <span>{{formatDate(link.createdAt)}}</span>
+                </div>
+                <div class="flex flex-col gap-y-2">
+                  <span class="text-sm textMuted">Is public</span>
+                  <span>{{link.chat.isPublic ? 'Yes' : 'No'}}</span>
                 </div>
               </div>
             </div>
 
-            <div class="flex flex-row flex-wrap justify-end gap-3">
-              <button class="styleFloatBut" [routerLink]="['/chat/' + link.chat.id]">
-                <ion-icon class="!text-2xl" name="arrow-forward-circle-outline" />
-              </button>
-              <button class="styleFloatBut">
-                <ion-icon class="!text-2xl" name="trash-outline" />
-              </button>
-            </div>
+            <button class="!p-1 styleFloatBut !text-red-500" id="deleteBut" (click)="delete(link.id)">
+              <ion-icon class="!text-3xl" name="trash-outline" />
+            </button>
           </div>
         } @else {
           @if (isLoading) {
             <div class="flex flex-row justify-between items-center gap-y-3 p-3 styleBorderSolidLite border animate-pulse">
-              <div class="flex flex-row items-center gap-x-3">
-                <div class="rounded-xl bg-gray-500 w-4 h-7"></div>
-
-                <div class="flex flex-col gap-y-5">
+              <div class="flex flex-col gap-y-5">
+                <div class="flex flex-row items-center gap-x-3">
+                  <div class="rounded bg-gray-500 w-5 h-5"></div>
                   <div class="rounded-xl bg-gray-500 w-32 h-3"></div>
+                </div>
 
-                  <div class="flex flex-col min-[500px]:flex-row gap-y-5 min-[500px]:gap-x-10">
-                    <div class="rounded-xl bg-gray-500 w-32 h-3"></div>
-                    <div class="rounded-xl bg-gray-500 w-32 h-3"></div>
+                <div class="flex flex-row flex-wrap gap-5">
+                  <div class="flex flex-col gap-y-2">
+                    <div class="rounded-xl bg-gray-500 w-20 h-3"></div>
+                    <div class="rounded-xl bg-gray-500 w-24 h-3"></div>
+                  </div>
+                  <div class="flex flex-col gap-y-2">
+                    <div class="rounded-xl bg-gray-500 w-20 h-3"></div>
+                    <div class="rounded-xl bg-gray-500 w-24 h-3"></div>
+                  </div>
+                  <div class="flex flex-col gap-y-2">
+                    <div class="rounded-xl bg-gray-500 w-20 h-3"></div>
+                    <div class="rounded-xl bg-gray-500 w-24 h-3"></div>
                   </div>
                 </div>
               </div>
@@ -122,6 +125,7 @@
 
 @if (isShowWindowEdit) {
   <app-shared-links-form
+    (submitEvent)="refresh(); isShowWindowEdit = false"
     (closeWindow)="closeWindow($event)"
   ></app-shared-links-form>
 }

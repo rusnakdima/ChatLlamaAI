@@ -1,7 +1,7 @@
 /* system libraries */
 import { CommonModule } from "@angular/common";
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from "@angular/core";
-import { RouterModule } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
 import { NgxPaginationModule } from "ngx-pagination";
 import { Subject } from "rxjs";
 
@@ -44,6 +44,7 @@ import {
 })
 export class SharedLinksComponent implements OnInit {
   constructor(
+    private router: Router,
     private authService: AuthService,
     private sharedLinksService: SharedLinksService
   ) {}
@@ -182,6 +183,12 @@ export class SharedLinksComponent implements OnInit {
       this.selectedRecords.push(id);
     } else {
       this.selectedRecords.splice(this.selectedRecords.indexOf(id), 1);
+    }
+  }
+
+  openChat(event: any, chatId: string) {
+    if (event.target.getAttribute('id') != 'deleteBut' && event.target.getAttribute('name') != 'trash-outline' && event.target.getAttribute('type') != "checkbox") {
+      this.router.navigate([`/chat/${chatId}`]);
     }
   }
 

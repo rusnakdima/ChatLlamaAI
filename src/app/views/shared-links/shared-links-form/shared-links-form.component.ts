@@ -32,6 +32,7 @@ import {
   templateUrl: "./shared-links-form.component.html",
 })
 export class SharedLinksFormComponent implements OnInit {
+  @Output() submitEvent: EventEmitter<void> = new EventEmitter<void>();
   @Output() closeWindow: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
@@ -109,6 +110,7 @@ export class SharedLinksFormComponent implements OnInit {
 
               if (data.status == "success") {
                 this.inputLink = "";
+                this.submitEvent.next();
               }
             })
             .catch((err) => {
