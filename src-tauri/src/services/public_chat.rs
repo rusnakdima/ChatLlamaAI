@@ -152,3 +152,37 @@ pub async fn delete_public_chat(id: String) -> Response {
     }
   }
 }
+
+pub async fn delete_public_chat_by_chat_id(chatid: String) -> Response {
+  let database: Database = connect_db().await.unwrap();
+  let coll: Collection<Document> = database.collection("public_chats");
+
+  let result = coll
+    .delete_one(doc! { "chatId": chatid.clone() })
+    .await;
+
+  match result {
+    Ok(deletion_result) => {
+      if deletion_result.deleted_count == 1 {
+        return Response {
+          status: "success".to_string(),
+          message: "Public chat deleted successfully!".to_string(),
+          data: "".to_string(),
+        };
+      } else {
+        return Response {
+          status: "error".to_string(),
+          message: "Public chat not found!".to_string(),
+          data: "".to_string(),
+        };
+      }
+    }
+    Err(e) => {
+      return Response {
+        status: "error".to_string(),
+        message: format!("Error: {}", e),
+        data: "".to_string(),
+      };
+    }
+  }
+}

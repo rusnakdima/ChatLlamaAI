@@ -15,7 +15,7 @@ use crate::models::{
 use super::{
   messages::delete_messages,
   mongodb::connect_db,
-  public_chat::delete_public_chat
+  public_chat::delete_public_chat_by_chat_id
 };
 
 pub async fn get_chats_by_userid(userid: String) -> Response {
@@ -289,7 +289,7 @@ pub async fn delete_chat(chat_id: String) -> Response {
     return resul_del_messages;
   }
 
-  let result_del_pub_chat = delete_public_chat(chat_id.clone()).await;
+  let result_del_pub_chat = delete_public_chat_by_chat_id(chat_id.clone()).await;
 
   if result_del_pub_chat.status == "error" {
     return result_del_pub_chat;
