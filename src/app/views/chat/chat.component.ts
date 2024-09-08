@@ -107,6 +107,9 @@ export class ChatComponent implements OnInit {
 
     this.route.params.subscribe(async (params) => {
       if (params["id"]) {
+        if (this.chatId != params["id"]) {
+          this.messages = [null, null, null, null, null, null, null, null, null, null];
+        }
         this.chatId = params["id"];
         this.getChatData();
         await new Promise((res) => setTimeout(res, 1000));

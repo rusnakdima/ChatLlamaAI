@@ -115,6 +115,12 @@ export class NavComponent {
     );
   }
 
+  openChat(event: any, chatId: string) {
+    if (event.target.getAttribute('id') != "menuBut" && event.target.getAttribute('name') != "ellipsis-horizontal-outline") {
+      this.router.navigate([`/chat/${chatId}`]);
+    }
+  }
+
   formatDate(date: string) {
     return Common.formatLocaleDate(date);
   }

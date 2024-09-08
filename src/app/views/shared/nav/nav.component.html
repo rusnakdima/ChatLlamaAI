@@ -18,8 +18,7 @@
             }
           </div>
 
-          <div class="flex flex-col justify-between items-center styleBorderSolidLite border styleLinkMenu w-full text-center cursor-pointer"
-                  [routerLink]="['/chat/' + chat.id]">
+          <div class="flex flex-col justify-between items-center styleBorderSolidLite border styleLinkMenu w-full text-center cursor-pointer" (click)="openChat($event, chat.id)">
             <div class="flex flex-row items-center gap-x-2">
               @if (chat.isPublic) {
                 <ion-icon matTooltip="Public" class="!text-xl" name="lock-open-outline" />
@@ -29,7 +28,7 @@
               <span class="text-lg">{{truncateString(chat.title)}}</span>
             </div>
 
-            <button class="flex flex-col items-center" [matMenuTriggerFor]="matOptionsMenu">
+            <button class="flex flex-col items-center" id="menuBut" [matMenuTriggerFor]="matOptionsMenu">
               <ion-icon class="!text-xl" name="ellipsis-horizontal-outline" />
             </button>
             <mat-menu #matOptionsMenu="matMenu">
