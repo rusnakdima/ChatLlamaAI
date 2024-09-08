@@ -23,7 +23,7 @@ use super::messages::{
 };
 use super::users::get_user_by_id;
 
-pub async fn ask_ai(userid: String, chatid: String, message: String) -> Response {
+pub async fn ask_ai(chatid: String, message: String) -> Response {
   let (_, user_result): (Response, Option<UserData>) = get_user_by_id("80c9c4a6-9046-44e7-ba54-73d285ed8c78".to_string()).await;
   let mut user: UserData;
 

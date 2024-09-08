@@ -26,9 +26,8 @@ export class MessagesService {
     return Response.fromJson(JSON.parse(rawRes), true);
   }
 
-  async askAI(userId: string, chatId: string, message: string): Promise<Response> {
+  async askAI(chatId: string, message: string): Promise<Response> {
     const rawRes = (await invoke("ask_ai", {
-      userid: userId,
       chatid: chatId,
       message: message,
     })) as string;

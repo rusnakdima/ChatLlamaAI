@@ -246,7 +246,6 @@ export class ChatComponent implements OnInit {
 
     this.messagesService
       .askAI(
-        this.userId,
         this.chatId,
         this.messages[this.messages.length - 1]!.content
       )
