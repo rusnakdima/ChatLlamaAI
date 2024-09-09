@@ -153,6 +153,7 @@ pre {
 .mat-datepicker-content,
 .mat-mdc-select-panel,
 .mat-mdc-menu-panel,
+.mat-datepicker-actions,
 .mat-expansion-panel {
   @apply !rounded-xl styleBorderSolidLite !border
 }
@@ -161,6 +162,8 @@ pre {
 .mat-mdc-select-panel,
 .mat-mdc-menu-panel,
 .mat-expansion-panel,
+.mat-datepicker-actions,
+.mat-datepicker-content,
 .mat-mdc-dialog-container .mdc-dialog__surface {
   @apply !bg-slate-100 dark:!bg-neutral-800
 }
@@ -169,8 +172,8 @@ pre {
 .mat-calendar-body-label,
 .mat-calendar-body-cell:not(.mat-calendar-body-disabled)>*,
 .mat-datepicker-content,
+.mat-datepicker-actions,
 .mat-mdc-icon-button,
-.mat-datepicker-content,
 .mdc-button-label,
 .mat-mdc-button:not(:disabled),
 .mat-mdc-icon-button:not(.mat-mdc-button-disabled),
