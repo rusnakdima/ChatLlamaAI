@@ -1,0 +1,89 @@
+<div class="fixed left-0 top-0 m-0 z-[555] w-full h-[100vh]">
+  <div class="absolute flex flex-col gap-y-3 right-0 styleBorderSolid border-l-2 theme w-[300px] h-full">
+    <div class="flex flex-row justify-between p-3 styleBorderSolid border-b">
+      <div class="flex flex-row items-center gap-x-2">
+        <ion-icon class="text-3xl cursor-pointer" name="close-outline" (click)="closeWindow.next('isShowWindFilter')" />
+        <span class="text-xl">Filters</span>
+      </div>
+      <button class="styleButInfo" (click)="apply()">Apply</button>
+    </div>
+
+    <div class="flex flex-col gap-y-3 p-3">
+      <mat-form-field [matMenuTriggerFor]="menuSort">
+        <mat-label>Sort by</mat-label>
+        <input matInput readonly type="text" [value]="[sortBy.title+' - '+sortDir.title]" />
+        <mat-menu #menuSort="matMenu">
+          <div class="flex flex-col gap-y-3 m-3" (click)="$event.stopPropagation()">
+            <select class="styleSelect" (change)="setSortBy($event)">
+              @for (sort of listSorts; track sort) {
+                <option [value]="sort.id" [selected]="getFilterValueByType('sortBy') == sort.id">{{sort.title}}</option>
+              }
+            </select>
+            <hr class="styleBorderSolidLite border" />
+            <div class="flex flex-row gap-x-1">
+              <input class="styleRadio"
+                    id="asc"
+                    name="sortDir"
+                    type="radio"
+                    value="asc"
+                    [checked]="getFilterValueByType('sortDir') == 'asc'"
+                    (change)="setSortDir($event)">
+              <label for="asc">Asc</label>
+            </div>
+
+            <div class="flex flex-row gap-x-1">
+              <input class="styleRadio"
+                    id="desc"
+                    name="sortDir"
+                    type="radio"
+                    value="desc"
+                    [checked]="getFilterValueByType('sortDir') == 'desc'"
+                    (change)="setSortDir($event)">
+              <label for="desc">Desc</label>
+            </div>
+          </div>
+        </mat-menu>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Owner</mat-label>
+        <mat-select (valueChange)="setOwner($event)" [value]="getFilterValueByType('owner')">
+          <mat-option value="all">All Owners</mat-option>
+          @for (elem of listProfiles; track elem) {
+            @if (elem.username != '') {
+              <mat-option [value]="elem.id">{{elem.username}}</mat-option>
+            }
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Added</mat-label>
+        <mat-date-range-input [formGroup]="rangeDateForm" [rangePicker]="picker">
+          <input matStartDate formControlName="startDate" placeholder="Start date">
+          <input matEndDate formControlName="endDate" placeholder="End date">
+        </mat-date-range-input>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker>
+          <mat-date-range-picker-actions>
+            <button class="styleFloatBut" (click)="clearDates()">Clear Dates</button>
+          </mat-date-range-picker-actions>
+        </mat-date-range-picker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Status</mat-label>
+        <mat-select (valueChange)="setStatus($event)" [value]="getFilterValueByType('status')">
+          <mat-option value="all">All Statuses</mat-option>
+          @for (elem of listStatus; track elem) {
+            <mat-option [value]="elem.id">{{elem.name}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<app-window-notify
+  [dataNotify]="dataNotify">
+</app-window-notify>

@@ -39,7 +39,10 @@ use controllers::public_chat::{
 
 use controllers::ai::ask_ai;
 
-use controllers::users::get_user_by_id;
+use controllers::users::{
+    get_user_by_id,
+    get_users_by_chats
+};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -72,6 +75,7 @@ pub fn run() {
             ask_ai,
 
             get_user_by_id,
+            get_users_by_chats
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

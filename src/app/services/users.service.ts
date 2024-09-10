@@ -17,4 +17,11 @@ export class UsersService {
     })) as string;
     return Response.fromJson(JSON.parse(rawRes), true);
   }
+
+  async getUsersByChats(userId: string): Promise<Response> {
+    const rawRes = (await invoke("get_users_by_chats", {
+      userid: userId,
+    })) as string;
+    return Response.fromJson(JSON.parse(rawRes), true);
+  }
 }

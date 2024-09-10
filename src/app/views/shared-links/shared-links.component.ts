@@ -21,6 +21,7 @@ import { SearchComponent } from "@views/shared/fields/search/search.component";
 import { ShowItemComponent } from "@views/shared/fields/show-item/show-item.component";
 import { PaginationComponent } from "@views/shared/pagination/pagination.component";
 import { SharedLinksFormComponent } from "./shared-links-form/shared-links-form.component";
+import { FilterComponent } from "./filter/filter.component";
 import {
   INotify,
   WindowNotifyComponent,
@@ -30,6 +31,7 @@ import {
   selector: "app-shared-links",
   standalone: true,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  providers: [AuthService, SharedLinksService],
   imports: [
     CommonModule,
     RouterModule,
@@ -38,6 +40,7 @@ import {
     ShowItemComponent,
     PaginationComponent,
     SharedLinksFormComponent,
+    FilterComponent,
     WindowNotifyComponent,
   ],
   templateUrl: "./shared-links.component.html",
@@ -67,7 +70,7 @@ export class SharedLinksComponent implements OnInit {
   ];
   tempListSharedLinks: Array<PublicChatFull> = [];
   selectedRecords: Array<string> = [];
-  filterParams: Array<any> = [];
+  filterParams: Array<{ id: string, title: string, type: string }> = [];
 
   userId: string = "";
   role: string = "";
@@ -141,8 +144,101 @@ export class SharedLinksComponent implements OnInit {
       });
   }
 
+  setFilter(event: Array<any>) {
+    this.closeWindow('isShowWindFilter');
+    this.filterParams = event;
+    this.listSharedLinks = this.tempListSharedLinks.filter((link) => {
+      return event.every((param: any) => {
+        if (param['type'] == 'owner') {
+          return link.user.id == param['id'];
+        } else if (param['type'] == 'status') {
+          return 'public' == param['id'];
+        } else if (param['type'] == 'dates') {
+          const startDate = new Date(new Date(param['id'].split('_-_')[0]).toLocaleDateString());
+          let endDate = new Date(new Date(param['id'].split('_-_')[1]).toLocaleDateString());
+          endDate.setDate(endDate.getDate() + 1);
+          const date = new Date(new Date(link.createdAt).toLocaleDateString());
+          if (startDate.getTime() == endDate.getTime()) {
+            if (startDate.getTime() <= date.getTime()) {
+              return true;
+            } else {
+              return false;
+            }
+          } else if (startDate.getTime() <= date.getTime() && date.getTime() < endDate.getTime()) {
+            return true;
+          } else {
+            return false;
+          }
+        } else if (param['type'] == 'sortBy') {
+          return true;
+        } else if (param['type'] == 'sortDir') {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    });
+
+    this.sort();
+  }
+
+  sort() {
+    const sortBy = this.filterParams.find(p => p.type === "sortBy");
+    const sortDir = this.filterParams.find(p => p.type === "sortDir");
+    if (!sortBy || !sortDir) return;
+
+    switch (sortBy.id) {
+      case 'owner':
+        if (sortDir.id == 'asc') {
+          this.listSharedLinks.sort((a, b) =>
+            a!.user.username.toLowerCase().localeCompare(b!.user.username.toLowerCase())
+          );
+        } else {
+          this.listSharedLinks.sort((a, b) =>
+            b!.user.username.toLowerCase().localeCompare(a!.user.username.toLowerCase())
+          );
+        }
+        break;
+      case 'added':
+        if (sortDir.id == 'asc') {
+          this.listSharedLinks.sort(
+            (a, b) =>
+              new Date(a!.createdAt).getTime() -
+              new Date(b!.createdAt).getTime()
+          );
+        } else {
+          this.listSharedLinks.sort(
+            (a, b) =>
+              new Date(b!.createdAt).getTime() -
+              new Date(a!.createdAt).getTime()
+          );
+        }
+        break;
+      case 'created':
+        if (sortDir.id == 'asc') {
+          this.listSharedLinks.sort(
+            (a, b) =>
+              new Date(a!.chat.createdAt).getTime() -
+              new Date(b!.chat.createdAt).getTime()
+          );
+        } else {
+          this.listSharedLinks.sort(
+            (a, b) =>
+              new Date(b!.chat.createdAt).getTime() -
+              new Date(a!.chat.createdAt).getTime()
+          );
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
   filter() {
     this.listSharedLinks = this.tempListSharedLinks.slice();
+    this.listSharedLinks.sort((a, b) => 
+      a.chat.title.toLowerCase().localeCompare(b.chat.title.toLowerCase())
+    );
   }
 
   onTableDataChange(event: any) {
