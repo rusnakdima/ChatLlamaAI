@@ -283,10 +283,10 @@ pub async fn delete_chat(chat_id: String) -> Response {
     .delete_one(doc! { "id": chat_id.clone() })
     .await;
 
-  let resul_del_messages = delete_messages(chat_id.clone()).await;
+  let result_del_messages = delete_messages(chat_id.clone()).await;
 
-  if resul_del_messages.status == "error" {
-    return resul_del_messages;
+  if result_del_messages.status == "error" {
+    return result_del_messages;
   }
 
   let result_del_pub_chat = delete_public_chat_by_chat_id(chat_id.clone()).await;
