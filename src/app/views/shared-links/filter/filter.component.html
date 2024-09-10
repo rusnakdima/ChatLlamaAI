@@ -66,7 +66,9 @@
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-date-range-picker #picker>
           <mat-date-range-picker-actions>
-            <button class="styleFloatBut" (click)="clearDates()">Clear Dates</button>
+            <button matDateRangePickerCancel class="styleFloatBut" (click)="clearDates()">Clear Dates</button>
+            <div class="mx-2"></div>
+            <button matDateRangePickerApply class="styleFloatBut">Apply</button>
           </mat-date-range-picker-actions>
         </mat-date-range-picker>
       </mat-form-field>
