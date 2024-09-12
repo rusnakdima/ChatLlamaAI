@@ -1,6 +1,6 @@
 [package]
 name = "chatllamaai"
-version = "0.2.0"
+version = "0.3.0"
 description = "Chat Llama AI"
 authors = ["Dmitriy303"]
 license = "MIT License"
