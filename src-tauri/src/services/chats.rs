@@ -131,7 +131,7 @@ pub async fn create_chat(chat_form: Chat) -> Response {
     Ok(_) => {
       return Response {
         status: "success".to_string(),
-        message: "Chat created successfully!".to_string(),
+        message: "".to_string(),
         data: chat_doc.get_str("id").unwrap().to_string().clone(),
       }
     }

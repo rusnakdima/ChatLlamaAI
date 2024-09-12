@@ -160,7 +160,7 @@ pub async fn delete_messages(chatid: String) -> Response {
         };
       } else {
         return Response {
-          status: "error".to_string(),
+          status: "warning".to_string(),
           message: "No messages found to delete!".to_string(),
           data: "".to_string(),
         };

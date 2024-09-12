@@ -171,7 +171,7 @@ pub async fn delete_public_chat_by_chat_id(chatid: String) -> Response {
         };
       } else {
         return Response {
-          status: "error".to_string(),
+          status: "warning".to_string(),
           message: "Public chat not found!".to_string(),
           data: "".to_string(),
         };
