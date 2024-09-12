@@ -112,16 +112,16 @@ export class ChatComponent implements OnInit {
         }
         this.chatId = params["id"];
         this.getChatData();
-        await new Promise((res) => setTimeout(res, 1000));
+        await new Promise((res) => setTimeout(res, 500));
         this.getMessages(this.chatId);
       }
     });
 
     this.route.queryParams.subscribe(async (params) => {
       if (params["from"] && params["from"] == "home") {
-        await new Promise((res) => setTimeout(res, 3000));
+        this.messages = [];
+        await new Promise((res) => setTimeout(res, 1500));
         this.askAi();
-        await new Promise((res) => setTimeout(res, 1000));
         this.router.navigate(['/chat/' + this.chatId]);
       }
     });
