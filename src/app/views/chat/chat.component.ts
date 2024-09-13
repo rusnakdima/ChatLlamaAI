@@ -10,6 +10,7 @@ import { AuthService } from "@services/auth.service";
 import { UsersService } from "@services/users.service";
 import { ChatsService } from "@services/chats.service";
 import { MessagesService } from "@services/messages.service";
+import { MdParseService } from "@services/md-parse.service";
 
 /* models */
 import { Response } from "@models/response";
@@ -44,7 +45,8 @@ export class ChatComponent implements OnInit {
     private authService: AuthService,
     private chatsService: ChatsService,
     private messagesService: MessagesService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private mdParseService: MdParseService
   ) {}
 
   dataNotify: Subject<INotify> = new Subject();
@@ -125,6 +127,10 @@ export class ChatComponent implements OnInit {
         this.router.navigate(['/chat/' + this.chatId]);
       }
     });
+  }
+
+  parseContent(content: string) {
+    return this.mdParseService.parseData(content);
   }
 
   getChatData() {
