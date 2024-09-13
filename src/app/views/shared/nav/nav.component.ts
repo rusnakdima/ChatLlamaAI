@@ -2,8 +2,8 @@
 import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import { Router, RouterModule } from "@angular/router";
-import { Subject } from "rxjs";
+import { NavigationEnd, Router, RouterModule } from "@angular/router";
+import { filter, Subject } from "rxjs";
 
 /* materials */
 import { MatMenuModule } from "@angular/material/menu";
@@ -71,6 +71,8 @@ export class NavComponent {
   userId: string = "";
   role: string = "";
 
+  currentTab: string = "";
+
   tempShareChat: Chat | null = null;
 
   isShowShareWindow: boolean = false;
@@ -80,6 +82,12 @@ export class NavComponent {
     this.role = this.authService.getValueByKey("role") ?? "user";
 
     this.eventService.listenRefresh$.subscribe(() => this.refresh());
+
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((val) => {
+        this.currentTab = this.router.url.split('/').pop() ?? '';
+      });
 
     this.refresh();
   }
@@ -109,7 +117,7 @@ export class NavComponent {
 
   sort() {
     this.listChats.sort((a, b) =>
-      new Date(a!.createdAt).getTime() > new Date(b!.createdAt).getTime()
+      new Date(a!.updatedAt).getTime() > new Date(b!.updatedAt).getTime()
         ? -1
         : 1
     );
