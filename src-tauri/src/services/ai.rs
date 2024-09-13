@@ -101,7 +101,7 @@ pub async fn ask_ai(chatid: String, message: String) -> Response {
     chatId: chatid.clone(),
     content: ai_text.clone(),
     userId: user.id.clone(),
-    createdAt: chrono::Utc::now().to_string(),
+    createdAt: format!("{}", chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.3fZ")),
   };
 
   let save_message: Response = send_message(message_form.clone()).await;
