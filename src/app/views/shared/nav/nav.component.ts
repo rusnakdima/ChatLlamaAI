@@ -1,7 +1,7 @@
 /* system libraries */
 import { CommonModule } from "@angular/common";
 import { HttpClientModule } from "@angular/common/http";
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from "@angular/core";
 import { NavigationEnd, Router, RouterModule } from "@angular/router";
 import { filter, Subject } from "rxjs";
 
@@ -43,7 +43,7 @@ import {
   ],
   templateUrl: "./nav.component.html",
 })
-export class NavComponent {
+export class NavComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -83,6 +83,7 @@ export class NavComponent {
 
     this.eventService.listenRefresh$.subscribe(() => this.refresh());
 
+    this.currentTab = this.router.url.split('/').pop() ?? '';
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((val) => {
