@@ -41,7 +41,6 @@ export class AboutComponent {
 
   ngOnInit(): void {
     this.getDate();
-    this.checkUpdate();
   }
 
   matchVersion(lastVer: string) {
