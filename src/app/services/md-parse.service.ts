@@ -10,7 +10,7 @@ export class MdParseService {
     let htmlRaw = '';
     let tempText = text;
 
-    const supReg = new RegExp(`\\^([^\\^\\n]+)\\^`);
+    const supReg = new RegExp(`[\\ \\n]\\^([^\\^\\n]+)\\^[\\ \\n]`);
     const sup = tempText.match(new RegExp(supReg.source, 'g'));
     if (sup && sup.length > 0) {
       sup.forEach((val: string) => {
@@ -21,7 +21,7 @@ export class MdParseService {
       });
     }
 
-    const subReg = new RegExp(`\\~([^\\~\\n]+)\\~`);
+    const subReg = new RegExp(`[\\ \\n]\\~([^\\~\\n]+)\\~[\\ \\n]`);
     const sub = tempText.match(new RegExp(subReg.source, 'g'));
     if (sub && sub.length > 0) {
       sub.forEach((val: string) => {
@@ -32,7 +32,7 @@ export class MdParseService {
       });
     }
 
-    const boldReg = new RegExp(`\\*\{2\}([^\\*\\n]+)\\*\{2\}`);
+    const boldReg = new RegExp(`[\\ \\n]\\*\{2\}([^\\*\\n]+)\\*\{2\}[\\ \\n]`);
     const bold = tempText.match(new RegExp(boldReg.source, 'g'));
     if (bold && bold.length > 0) {
       bold.forEach((val: string) => {
@@ -43,7 +43,7 @@ export class MdParseService {
       });
     }
 
-    const italicReg = new RegExp(`\\*([^\\*\\n]+)\\*`);
+    const italicReg = new RegExp(`[\\ \\n]\\*([^\\*\\n]+)\\*[\\ \\n]`);
     const italic = tempText.match(new RegExp(italicReg.source, 'g'));
     if (italic && italic.length > 0) {
       italic.forEach((val: string) => {
@@ -54,7 +54,7 @@ export class MdParseService {
       });
     }
 
-    const italicAltReg = new RegExp(`\\_([^\\_\\n]+)\\_`);
+    const italicAltReg = new RegExp(`[\\ \\n]\\_([^\\_\\n]+)\\_[\\ \\n]`);
     const italicAlt = tempText.match(new RegExp(italicAltReg.source, 'g'));
     if (italicAlt && italicAlt.length > 0) {
       italicAlt.forEach((val: string) => {
@@ -65,7 +65,7 @@ export class MdParseService {
       });
     }
 
-    const linkReg = new RegExp(`\\[(.+)\\]\\((.+)\\)`);
+    const linkReg = new RegExp(`[\\ \\n]\\[(.+)\\]\\((.+)\\)[\\ \\n]`);
     const link = tempText.match(new RegExp(linkReg.source, 'g'));
     if (link && link.length > 0) {
       link.forEach((val: string) => {
@@ -129,6 +129,35 @@ export class MdParseService {
           }
           const ul = `<ol class="list-decimal list-inside">${li}</ol>`;
           tempText = tempText.replace(dataRegBlock[0], ul);
+        }
+      });
+    }
+
+    const tableBlocksReg = new RegExp(`^(\\|.*?\\|\n*)+\n?$`);
+    const tableBlocks = tempText.match(new RegExp(tableBlocksReg.source, 'gm'));
+    if (tableBlocks && tableBlocks.length > 0) {
+      tableBlocks.forEach((block: string) => {
+        const dataRegBlock = tableBlocksReg.exec(block);
+        if (dataRegBlock) {
+          const tableReg = new RegExp(`^\\|(.*?)\\|\n?$`);
+          const table = block.match(new RegExp(tableReg.source, 'gm'));
+          let tr = '';
+          if (table && table.length > 0) {
+            table.forEach((row: string) => {
+              const dataReg = tableReg.exec(row);
+              let td = '';
+              if (dataReg) {
+                dataReg[1].split('|').forEach((cell: string) => {
+                  if (!cell.trim().split('').includes('-')) {
+                    td += `<td class="styleTD">${cell}</td>`;
+                  }
+                });
+                tr += `<tr>${td}</tr>`;
+              }
+            });
+            const tableStr = `<table class="styleTD">${tr}</table>`;
+            tempText = tempText.replace(dataRegBlock[0], tableStr);
+          }
         }
       });
     }
