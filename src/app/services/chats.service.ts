@@ -32,6 +32,13 @@ export class ChatsService {
     return Response.fromJson(JSON.parse(rawRes));
   }
 
+  async renameTitleChat(chatForm: any): Promise<Response> {
+    const rawRes = (await invoke("rename_title_chat", {
+      chatFormRaw: JSON.stringify(chatForm),
+    })) as string;
+    return Response.fromJson(JSON.parse(rawRes));
+  }
+
   async shareChat(chatid: string): Promise<Response> {
     const rawRes = (await invoke("share_chat", { chatid: chatid })) as string;
     return Response.fromJson(JSON.parse(rawRes));

@@ -37,7 +37,11 @@
             </button>
             <mat-menu #matOptionsMenu="matMenu">
               <div class="flex flex-col p-2">
-                <button class="styleLinkMenu" (click)="tempShareChat = chat; isShowShareWindow = true">
+                <button class="styleLinkMenu" (click)="tempChat = chat; isShowRenameTitle = true">
+                  <ion-icon class="!text-xl" name="create-outline" />
+                  <span>Rename Title</span>
+                </button>
+                <button class="styleLinkMenu" (click)="tempChat = chat; isShowShareWindow = true">
                   <ion-icon class="!text-xl" name="arrow-redo-outline" />
                   <span>Share</span>
                 </button>
@@ -74,9 +78,17 @@
   </button>
 </div>
 
+@if (isShowRenameTitle) {
+  <app-rename-title
+    [chat]="tempChat"
+    (submitEvent)="renameTitle()"
+    (closeWindowEvent)="isShowRenameTitle = false"
+  ></app-rename-title>
+}
+
 @if (isShowShareWindow) {
   <app-share-window
-    [chat]="tempShareChat"
+    [chat]="tempChat"
     (shareChatEvent)="shareChat($event)"
     (closeChatEvent)="closeChat($event)"
     (closeWindowEvent)="isShowShareWindow = false"

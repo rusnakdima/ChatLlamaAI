@@ -23,6 +23,7 @@ import { Chat } from "@models/chat";
 
 /* components */
 import { ShareWindowComponent } from "./share-window/share-window.component";
+import { RenameTitleComponent } from "./rename-title/rename-title.component";
 import {
   INotify,
   WindowNotifyComponent,
@@ -39,8 +40,9 @@ import {
     MatMenuModule,
     MatTooltipModule,
     ShareWindowComponent,
+    RenameTitleComponent,
     WindowNotifyComponent,
-  ],
+],
   templateUrl: "./nav.component.html",
 })
 export class NavComponent implements OnInit {
@@ -73,9 +75,10 @@ export class NavComponent implements OnInit {
 
   currentTab: string = "";
 
-  tempShareChat: Chat | null = null;
+  tempChat: Chat | null = null;
 
   isShowShareWindow: boolean = false;
+  isShowRenameTitle: boolean = false;
 
   ngOnInit(): void {
     this.userId = this.authService.getValueByKey("id") ?? "";
@@ -138,6 +141,29 @@ export class NavComponent implements OnInit {
     return Common.truncateString(str, 10);
   }
 
+  renameTitle() {
+    this.chatsService
+      .renameTitleChat(this.tempChat)
+      .then((data: Response) => {
+        this.dataNotify.next({ status: data.status, text: data.message });
+        if (data.status == "success") {
+          this.tempChat = data.data as Chat;
+        }
+        this.isShowRenameTitle = false;
+      })
+      .catch((err) => {
+        console.error(err);
+        this.dataNotify.next({
+          status: "error",
+          text: `${
+            this.role === "admin"
+              ? err.status + " — " + err.message
+              : "Server error!"
+          }`,
+        });
+      });
+  }
+
   shareChat(chatId: string) {
     if (chatId != "") {
       this.chatsService
@@ -145,7 +171,7 @@ export class NavComponent implements OnInit {
         .then((data: Response) => {
           this.dataNotify.next({ status: data.status, text: data.message });
           if (data.status == "success") {
-            this.tempShareChat!.isPublic = true;
+            this.tempChat!.isPublic = true;
           }
         })
         .catch((err) => {
@@ -169,7 +195,7 @@ export class NavComponent implements OnInit {
         .then((data: Response) => {
           this.dataNotify.next({ status: data.status, text: data.message });
           if (data.status == "success") {
-            this.tempShareChat!.isPublic = false;
+            this.tempChat!.isPublic = false;
           }
         })
         .catch((err) => {
