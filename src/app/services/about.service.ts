@@ -7,6 +7,9 @@ import { invoke } from '@tauri-apps/api/core';
 /* env */
 import { environment } from "@env/environment";
 
+/* models */
+import { Response } from "@models/response";
+
 const httpOptions = {
   headers: new HttpHeaders({
     "Content-Type": "application/json",
@@ -28,7 +31,7 @@ export class AboutService {
     );
   }
 
-  getBinaryNameFile() {
+  getBinaryNameFile(): Promise<Response> {
     return invoke("get_binary_name_file");
   }
 
@@ -39,7 +42,7 @@ export class AboutService {
     );
   }
 
-  downloadUpdate(version: string, nameFile: string) {
+  downloadUpdate(version: string, nameFile: string): Promise<Response> {
     return invoke("download_update", {
       url: `https://github.com/rusnakdima/${this.nameProduct}/releases/download/${version}/${nameFile}`,
       fileName: nameFile,

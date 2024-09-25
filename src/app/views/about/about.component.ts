@@ -8,7 +8,11 @@ import { Subject } from "rxjs";
 import { environment } from "@env/environment";
 
 /* services */
+import { AuthService } from "@services/auth.service";
 import { AboutService } from "@services/about.service";
+
+/* models */
+import { Response } from "@models/response";
 
 /* components */
 import {
@@ -24,9 +28,14 @@ import {
   templateUrl: "./about.component.html",
 })
 export class AboutComponent {
-  constructor(private aboutService: AboutService) {}
+  constructor(
+    private authService: AuthService,
+    private aboutService: AboutService
+  ) {}
 
   dataNotify: Subject<INotify> = new Subject();
+
+  role: string = '';
 
   version: string = environment.version;
   dateVersion: string = localStorage["dateVersion"] || "Unknown";
@@ -40,6 +49,8 @@ export class AboutComponent {
   downloadProgress: boolean = false;
 
   ngOnInit(): void {
+    this.role = this.authService.getValueByKey('role') ?? 'user';
+
     this.getDate();
   }
 
@@ -68,18 +79,24 @@ export class AboutComponent {
   getDate() {
     this.aboutService
       .getBinaryNameFile()
-      .then((data: any) => {
-        if (data) {
-          if (data != "Unknown") {
-            this.nameFile = data;
+      .then((data: Response) => {
+        this.dataNotify.next({ status: data.status, text: data.message });
+        if (data.status == "success") {
+          if (data.data != "Unknown") {
+            this.nameFile = data.data as string;
           }
-        } else {
-          throw Error(data);
         }
       })
-      .catch((err: any) => {
+      .catch((err) => {
         console.error(err);
-        this.dataNotify.next({ status: "error", text: err });
+        this.dataNotify.next({
+          status: "error",
+          text: `${
+            this.role === "admin"
+              ? err.status + " — " + err.message
+              : "Server error!"
+          }`,
+        });
       });
 
     this.aboutService.getDate(this.version).subscribe({
@@ -94,11 +111,15 @@ export class AboutComponent {
         }
       },
       error: (err: any) => {
-        console.error(err);
         this.downloadProgress = false;
+        console.error(err);
         this.dataNotify.next({
           status: "error",
-          text: err.status + " — " + err.error.message,
+          text: `${
+            this.role === "admin"
+              ? err.status + " — " + err.message
+              : "Server error!"
+          }`,
         });
       },
     });
@@ -150,20 +171,25 @@ export class AboutComponent {
         });
       this.aboutService
         .downloadUpdate(this.lastVersion, this.nameFile)
-        .then((data: any) => {
-          if (data) {
-            this.dataNotify.next({
-              status: "success",
-              text: "The new version of the program has been successfully downloaded!",
-            });
-            this.pathUpdate = data;
-          } else {
-            throw Error(data);
+        .then((data: Response) => {
+          this.dataNotify.next({
+            status: "success",
+            text: "The new version of the program has been successfully downloaded!",
+          });
+          if (data.status == "success") {
+            this.pathUpdate = data.data;
           }
         })
-        .catch((err: any) => {
+        .catch((err) => {
           console.error(err);
-          this.dataNotify.next({ status: "error", text: err });
+          this.dataNotify.next({
+            status: "error",
+            text: `${
+              this.role === "admin"
+                ? err.status + " — " + err.message
+                : "Server error!"
+            }`,
+          });
         });
       this.downloadProgress = false;
       this.windUpdates = false;
@@ -176,9 +202,18 @@ export class AboutComponent {
   }
 
   openFile() {
-    this.aboutService.openFile(this.pathUpdate).catch((err: any) => {
-      console.error(err);
-      this.dataNotify.next({ status: "error", text: err });
-    });
+    this.aboutService
+      .openFile(this.pathUpdate)
+      .catch((err) => {
+        console.error(err);
+        this.dataNotify.next({
+          status: "error",
+          text: `${
+            this.role === "admin"
+              ? err.status + " — " + err.message
+              : "Server error!"
+          }`,
+        });
+      });
   }
 }
