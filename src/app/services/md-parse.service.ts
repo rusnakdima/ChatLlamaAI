@@ -10,40 +10,40 @@ export class MdParseService {
     let htmlRaw = '';
     let tempText = text;
 
-    const supReg = new RegExp(`[\\ \\n]\\^([^\\^\\n]+)\\^[\\ \\n]`);
+    const supReg = new RegExp(`[\\ \\n](\\^([^\\^\\n]+)\\^)[\\ \\n\\.\\;\\:\\-\\!\\?]`);
     const sup = tempText.match(new RegExp(supReg.source, 'g'));
     if (sup && sup.length > 0) {
       sup.forEach((val: string) => {
         const dataReg = supReg.exec(val);
         if (dataReg) {
-          tempText = tempText.replace(dataReg[0], `<sup>${dataReg[1]}</sup>`);
+          tempText = tempText.replace(dataReg[1], `<sup>${dataReg[2]}</sup>`);
         }
       });
     }
 
-    const subReg = new RegExp(`[\\ \\n]\\~([^\\~\\n]+)\\~[\\ \\n]`);
+    const subReg = new RegExp(`[\\ \\n](\\~([^\\~\\n]+)\\~)[\\ \\n\\.\\;\\:\\-\\!\\?]`);
     const sub = tempText.match(new RegExp(subReg.source, 'g'));
     if (sub && sub.length > 0) {
       sub.forEach((val: string) => {
         const dataReg = subReg.exec(val);
         if (dataReg) {
-          tempText = tempText.replace(dataReg[0], `<sub>${dataReg[1]}</sub>`);
+          tempText = tempText.replace(dataReg[1], `<sub>${dataReg[2]}</sub>`);
         }
       });
     }
 
-    const boldReg = new RegExp(`[\\ \\n]\\*\{2\}([^\\*\\n]+)\\*\{2\}[\\ \\n]`);
+    const boldReg = new RegExp(`[\\ \\n](\\*\{2\}([^\\*\\n]+)\\*\{2\})[\\ \\n\\.\\;\\:\\-\\!\\?]`);
     const bold = tempText.match(new RegExp(boldReg.source, 'g'));
     if (bold && bold.length > 0) {
       bold.forEach((val: string) => {
         const dataReg = boldReg.exec(val);
         if (dataReg) {
-          tempText = tempText.replace(dataReg[0], `<b>${dataReg[1]}</b>`);
+          tempText = tempText.replace(dataReg[1], `<b>${dataReg[2]}</b>`);
         }
       });
     }
 
-    const italicReg = new RegExp(`[\\ \\n]\\*([^\\*\\n]+)\\*[\\ \\n]`);
+    const italicReg = new RegExp(`[\\ \\n](\\*([^\\*\\n]+)\\*)[\\ \\n\\.\\;\\:\\-\\!\\?]`);
     const italic = tempText.match(new RegExp(italicReg.source, 'g'));
     if (italic && italic.length > 0) {
       italic.forEach((val: string) => {
@@ -54,7 +54,7 @@ export class MdParseService {
       });
     }
 
-    const italicAltReg = new RegExp(`[\\ \\n]\\_([^\\_\\n]+)\\_[\\ \\n]`);
+    const italicAltReg = new RegExp(`[\\ \\n](\\_([^\\_\\n]+)\\_)[\\ \\n\\.\\;\\:\\-\\!\\?]`);
     const italicAlt = tempText.match(new RegExp(italicAltReg.source, 'g'));
     if (italicAlt && italicAlt.length > 0) {
       italicAlt.forEach((val: string) => {
@@ -65,7 +65,7 @@ export class MdParseService {
       });
     }
 
-    const linkReg = new RegExp(`[\\ \\n]\\[(.+)\\]\\((.+)\\)[\\ \\n]`);
+    const linkReg = new RegExp(`[\\ \\n]\\[(.+)\\]\\((.+)\\)[\\ \\n\\.\\;\\:\\-\\!\\?]`);
     const link = tempText.match(new RegExp(linkReg.source, 'g'));
     if (link && link.length > 0) {
       link.forEach((val: string) => {
@@ -87,20 +87,20 @@ export class MdParseService {
       });
     }
 
-    const listMarkedBlockReg = new RegExp(`^((\\ *[-*])\\ *.+\\n?)+\\n?$`);
+    const listMarkedBlockReg = new RegExp(`^((\\ *[-*+])\\ *.+\\n*)+\\n?$`);
     const listMarkedBlocks = tempText.match(new RegExp(listMarkedBlockReg.source, 'gm'));
     if (listMarkedBlocks && listMarkedBlocks.length > 0) {
       listMarkedBlocks.forEach((block: string) => {
         const dataRegBlock = listMarkedBlockReg.exec(block);
         if (dataRegBlock) {
-          const listMarkedReg = new RegExp(`^(\\ *)([-*])\\ *(.+)$`);
+          const listMarkedReg = new RegExp(`^(\\ *)([-*+])\\ *(.+)$`);
           const listMarked = block.match(new RegExp(listMarkedReg.source, 'gm'));
           let li = '';
           if (listMarked && listMarked.length > 0) {
             listMarked.forEach((val: string) => {
               const dataReg = listMarkedReg.exec(val);
               if (dataReg) {
-                li += `<li class='${(dataReg[1].length >= 2) ? "ml-4" : ""}'>${dataReg[3]}</li>`;
+                li += `<li class='ml-${4 * dataReg[1].length}'>${dataReg[3]}</li>`;
               }
             });
           }
@@ -116,18 +116,22 @@ export class MdParseService {
       listNumericBlocks.forEach((block: string) => {
         const dataRegBlock = listNumericBlockReg.exec(block);
         if (dataRegBlock) {
-          const listNumericReg = new RegExp(`^(\\ *)(\\d\\.)\\ *(.+)$`);
+          const listNumericReg = new RegExp(`^(\\ *)(\\d*)\\.\\ *(.+)$`);
           const listNumeric = block.match(new RegExp(listNumericReg.source, 'gm'));
           let li = '';
+          let start = 1;
           if (listNumeric && listNumeric.length > 0) {
-            listNumeric.forEach((val: string) => {
+            listNumeric.forEach((val: string, i: number) => {
               const dataReg = listNumericReg.exec(val);
               if (dataReg) {
-                li += `<li class='${(dataReg[1].length >= 2) ? "ml-4" : ""}'>${dataReg[3]}</li>`;
+                if (i == 0) {
+                  start = Number(dataReg[2]);
+                }
+                li += `<li class='ml-${4 * dataReg[1].length}'>${dataReg[3]}</li>`;
               }
             });
           }
-          const ul = `<ol class="list-decimal list-inside">${li}</ol>`;
+          const ul = `<ol class="list-decimal list-inside" start="${start}">${li}</ol>`;
           tempText = tempText.replace(dataRegBlock[0], ul);
         }
       });
@@ -250,16 +254,16 @@ export class MdParseService {
       });
     }
 
-    const brReg = /\n/;
-    const br = tempText.match(new RegExp(brReg.source, 'g'));
-    if (br && br.length > 0) {
-      br.forEach((val: string) => {
-        const dataReg = brReg.exec(val);
-        if (dataReg) {
-          tempText = tempText.replace(dataReg[0], `<br />`);
-        }
-      });
-    }
+    // const brReg = new RegExp(`^\\n?$`);
+    // const br = tempText.match(new RegExp(brReg.source, 'gm'));
+    // if (br && br.length > 0) {
+    //   br.forEach((val: string) => {
+    //     const dataReg = brReg.exec(val);
+    //     if (dataReg) {
+    //       tempText = tempText.replace(dataReg[0], `<br />`);
+    //     }
+    //   });
+    // }
 
     htmlRaw = tempText;
     return htmlRaw;
