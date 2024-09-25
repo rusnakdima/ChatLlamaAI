@@ -5,6 +5,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Subject } from "rxjs";
 
+/* helpers */
+import { Common } from "@helpers/common";
+
 /* services */
 import { AuthService } from "@services/auth.service";
 import { UsersService } from "@services/users.service";
@@ -131,6 +134,10 @@ export class ChatComponent implements OnInit {
 
   parseContent(content: string) {
     return this.mdParseService.parseData(content);
+  }
+
+  formatDateTime(date: string) {
+    return Common.formatLocaleDate(date) +' '+ Common.formatTime(date);
   }
 
   getChatData() {

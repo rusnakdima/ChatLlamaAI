@@ -1,20 +1,19 @@
 <div class="sticky flex flex-col justify-between gap-y-3 p-5 -mt-[70px] h-screen">
-  <div class="flex flex-col gap-y-3 mt-[66px] overflow-y-auto" id="blockMessages">
+  <div class="flex flex-col gap-y-7 mt-[66px] overflow-y-auto" id="blockMessages">
     @for (message of messages; track message; let i = $index) {
       @if (message) {
-        <div class="flex flex-col gap-y-2" [ngClass]="[message.user.id == userId ? 'items-end' : 'items-start']">
-          <div class="flex items-center justify-center">
+        <div class="flex flex-col gap-y-2">
+          <div class="flex flex-row justify-start items-center gap-x-3">
             <img class="p-1 !rounded-full styleBorderSolidLite border w-10 h-10" [src]="message.user.image" alt="logo">
+            <div class="flex flex-col">
+              <span class="text-base">{{message.user.username}}</span>
+              <span class="text-sm textMuted">{{formatDateTime(message.createdAt)}}</span>
+            </div>
           </div>
-          @if (message.user.id == "80c9c4a6-9046-44e7-ba54-73d285ed8c78") {
-            <div class="px-3 py-2 rounded-lg styleBorderSolidLite border w-full">
-              <div [innerHTML]="parseContent(message.content)"></div>
-            </div>
-          } @else {
-            <div class="px-3 py-2 rounded-lg styleBorderSolidLite border w-auto max-w-full sm:max-w-2/3">
-              <pre class="text-wrap">{{message.content}}</pre>
-            </div>
-          }
+
+          <div class="px-3 py-2 rounded-lg styleBorderSolidLite border w-full">
+            <div [innerHTML]="parseContent(message.content)"></div>
+          </div>
         </div>
       } @else {
         <div class="flex flex-col gap-y-2 animate-pulse" [ngClass]="[i % 2 == 0 ? 'items-end' : 'items-start']">
