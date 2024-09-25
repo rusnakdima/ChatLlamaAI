@@ -36,6 +36,15 @@ export class RenameTitleComponent {
 
   newTitle: string = '';
 
+  ngOnInit() {
+    document.addEventListener('keydown', (event: any) => {
+      if (event.ctrlKey && event.key == 'Enter') {
+        event.preventDefault();
+        this.onSubmit();
+      }
+    });
+  }
+
   changeTitle(event: any) {
     this.newTitle = event.target.value;
   }
