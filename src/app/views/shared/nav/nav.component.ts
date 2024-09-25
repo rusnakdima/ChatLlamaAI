@@ -138,7 +138,7 @@ export class NavComponent implements OnInit {
   }
 
   truncateString(str: string): string {
-    return Common.truncateString(str, 10);
+    return Common.truncateString(str, 18);
   }
 
   renameTitle() {

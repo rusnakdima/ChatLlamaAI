@@ -1,4 +1,4 @@
-<div class="relative flex flex-col justify-between gap-y-3 p-3 !rounded-none styleBorderSolidLite border-r w-[250px] h-full">
+<div class="relative flex flex-col justify-between gap-y-3 p-3 !rounded-none styleBorderSolidLite border-r w-[300px] h-full">
   <button class="flex flex-col justify-center items-center styleBorderSolidLite border styleLinkMenu w-full text-center"
           [ngClass]="[currentTab == '' ? 'bg-gray-300 dark:bg-slate-600' : '']"
           [routerLink]="['/']">
@@ -29,7 +29,7 @@
               } @else {
                 <ion-icon matTooltip="Private" class="!text-xl" name="lock-closed-outline" />
               }
-              <span class="text-lg">{{truncateString(chat.title)}}</span>
+              <span class="text-base" matTooltip="{{chat.title}}">{{truncateString(chat.title)}}</span>
             </div>
 
             <button class="flex flex-col items-center" id="menuBut" [matMenuTriggerFor]="matOptionsMenu">
