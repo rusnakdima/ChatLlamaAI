@@ -2,9 +2,7 @@ mod models;
 mod services;
 mod controllers;
 
-mod about;
-
-use about::{
+use controllers::about::{
     download_update,
     get_binary_name_file
 };
@@ -21,6 +19,7 @@ use controllers::chats::{
     get_chats_by_userid,
     get_chat_by_id,
     create_chat,
+    rename_title_chat,
     share_chat,
     close_chat,
     delete_chat
@@ -61,6 +60,7 @@ pub fn run() {
             get_chats_by_userid,
             get_chat_by_id,
             create_chat,
+            rename_title_chat,
             share_chat,
             close_chat,
             delete_chat,

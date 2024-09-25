@@ -145,6 +145,58 @@ pub async fn create_chat(chat_form: Chat) -> Response {
   }
 }
 
+pub async fn rename_title_chat(chat_form: Chat) -> Response {
+  let database: Database = connect_db().await.unwrap();
+  let coll: Collection<Document> = database.collection("chats");
+  
+  let chat_result = coll
+    .find_one(doc! { "id": chat_form.id.clone() })
+    .await;
+
+  match chat_result {
+    Ok(chat_raw) => {
+      if let Some(_) = chat_raw {
+        let result = coll
+          .update_one(
+            doc! { "id": chat_form.id.clone() },
+            doc! { "$set": { "title": chat_form.title.clone() } },
+          )
+          .await;
+
+        match result {
+          Ok(_) => {
+            return Response {
+              status: "success".to_string(),
+              message: "".to_string(),
+              data: "".to_string(),
+            }
+          }
+          Err(e) => {
+            return Response {
+              status: "error".to_string(),
+              message: format!("Error: {}", e),
+              data: "".to_string(),
+            }
+          }
+        }
+      } else {
+        return Response {
+          status: "error".to_string(),
+          message: "The chat was not found!".to_string(),
+          data: "".to_string(),
+        }
+      }
+    }
+    Err(e) => {
+      return Response {
+        status: "error".to_string(),
+        message: format!("Error: {}", e),
+        data: "".to_string(),
+      }
+    }
+  }
+}
+
 pub async fn update_date(chat_id: String, updated_at: String) -> Response {
   let database: Database = connect_db().await.unwrap();
   let coll: Collection<Document> = database.collection("chats");

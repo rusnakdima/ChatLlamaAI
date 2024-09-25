@@ -26,6 +26,13 @@ pub async fn create_chat(chat_form_raw: String) -> String {
 }
 
 #[tauri::command]
+pub async fn rename_title_chat(chat_form_raw: String) -> String {
+  let chat_form: Chat = serde_json::from_str(&chat_form_raw).unwrap();
+  let res: Response = services::chats::rename_title_chat(chat_form).await;
+  format!("{}", serde_json::to_string(&res).unwrap())
+}
+
+#[tauri::command]
 pub async fn share_chat(chatid: String) -> String {
   let res: Response = services::chats::share_chat(chatid).await;
   format!("{}", serde_json::to_string(&res).unwrap())

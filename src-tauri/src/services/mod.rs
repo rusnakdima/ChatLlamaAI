@@ -1,6 +1,8 @@
 pub mod mongodb;
 pub mod manage_token;
 
+pub mod about;
+
 pub mod auth;
 pub mod users;
 
