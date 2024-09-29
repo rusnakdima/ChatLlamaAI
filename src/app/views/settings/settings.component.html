@@ -6,15 +6,31 @@
     <span>Setting</span>
   </div>
 
-  <div class="flex flex-col gap-y-5">
+  <div class="flex flex-col gap-y-8">
     <div class="flex flex-col gap-y-3">
       <span class="text-xl">The database used</span>
-      <label class="inline-flex flex-row gap-x-3 items-center cursor-pointer">
-        <input type="checkbox" [checked]="typeDB == 'cloud'" class="sr-only peer" (change)="changeType($event)">
-        <span class="styleLabel" for="db">Local</span>
-        <div class="styleToggle"></div>
-        <span class="styleLabel" for="db">Cloud</span>
-      </label>
+      @if (hasLocalDB) {
+        <label class="inline-flex flex-row gap-x-3 items-center cursor-pointer">
+          <input type="checkbox" [checked]="typeDB == 'cloud'" class="sr-only peer" (change)="changeType($event)">
+          <span class="styleLabel" for="db">Local</span>
+          <div class="styleToggle"></div>
+          <span class="styleLabel" for="db">Cloud</span>
+        </label>
+      } @else {
+        <span>The local database was not found!</span>
+      }
+    </div>
+
+    <div class="flex flex-col gap-y-3">
+      <span class="text-xl">Chat import/export function</span>
+      @if (hasLocalDB) {
+        <div class="flex flex-row gap-x-3">
+          <button class="styleButSuccess" (click)="importData()">Import</button>
+          <button class="styleButSuccess" (click)="exportData()">Export</button>
+        </div>
+      } @else {
+        <span>The import/export function is not available due to the lack of a local database!</span>
+      }
     </div>
   </div>
 </div>

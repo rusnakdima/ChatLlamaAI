@@ -110,6 +110,41 @@ pub async fn get_chat_by_id(typedb: String, chat_id: String) -> (Response, Optio
   }
 }
 
+pub async fn import_export_chats(typedb: String, chat_form: Chat) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
+  let coll: Collection<Document> = database.collection("chats");
+
+  let chat_doc = doc! {
+    "id": chat_form.id.clone(),
+    "title": chat_form.title.clone(),
+    "userId": chat_form.userId.clone(),
+    "createdAt": chat_form.createdAt.clone(),
+    "updatedAt": chat_form.updatedAt.clone(),
+    "isPublic": chat_form.isPublic.clone(),
+  };
+
+  let result = coll
+    .insert_one(chat_doc.clone())
+    .await;
+
+  match result {
+    Ok(_) => {
+      return Response {
+        status: "success".to_string(),
+        message: "".to_string(),
+        data: "".to_string(),
+      }
+    }
+    Err(e) => {
+      return Response {
+        status: "error".to_string(),
+        message: format!("Error: {}", e),
+        data: "".to_string(),
+      }
+    }
+  }
+}
+
 pub async fn create_chat(typedb: String, chat_form: Chat) -> Response {
   let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("chats");

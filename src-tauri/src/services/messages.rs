@@ -65,6 +65,79 @@ pub async fn get_messages_by_chatid(typedb: String, chat_id: String) -> Response
   }
 }
 
+pub async fn get_messages_by_chatid_for_ie(typedb: String, chat_id: String) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
+  let coll: Collection<Document> = database.collection("messages");
+
+  let mut messages_result = coll
+    .find(doc! { "chatId": chat_id.clone() })
+    .await;
+
+  match messages_result {
+    Ok(_) => {
+      let mut messages_vec: Vec<Message> = Vec::new();
+      while messages_result.as_mut().unwrap().advance().await.unwrap() {
+        let message_doc: Document = Document::try_from(messages_result.as_ref().unwrap().current()).unwrap();
+        let message: Message = Message {
+          id: message_doc.get_str("id").unwrap().to_string(),
+          chatId: message_doc.get_str("chatId").unwrap().to_string(),
+          userId: message_doc.get_str("userId").unwrap().to_string(),
+          content: message_doc.get_str("content").unwrap().to_string(),
+          createdAt: message_doc.get_str("createdAt").unwrap().to_string(),
+        };
+        messages_vec.push(message);
+      }
+
+      return Response {
+        status: "success".to_string(),
+        message: "".to_string(),
+        data: serde_json::to_string(&messages_vec.clone()).unwrap(),
+      };
+    }
+    Err(e) => {
+      return Response {
+        status: "error".to_string(),
+        message: format!("Error: {}", e),
+        data: "".to_string(),
+      };
+    }
+  }
+}
+
+pub async fn import_export_message(typedb: String, message_form: Message) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
+  let coll: Collection<Document> = database.collection("messages");
+
+  let message_doc = doc! {
+    "id": message_form.id.clone(),
+    "chatId": message_form.chatId.clone(),
+    "content": message_form.content.clone(),
+    "userId": message_form.userId.clone(),
+    "createdAt": message_form.createdAt.clone(),
+  };
+
+  let message_result = coll
+    .insert_one(message_doc.clone())
+    .await;
+
+  match message_result {
+    Ok(_) => {
+      return Response {
+        status: "success".to_string(),
+        message: "".to_string(),
+        data: "".to_string(),
+      };
+    }
+    Err(e) => {
+      return Response {
+        status: "error".to_string(),
+        message: format!("Error: {}", e),
+        data: "".to_string(),
+      }
+    }
+  }
+}
+
 pub async fn send_message(typedb: String, message_form: Message) -> Response {
   let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("messages");
