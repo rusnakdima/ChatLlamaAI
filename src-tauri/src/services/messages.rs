@@ -24,8 +24,8 @@ use super::{
   users::get_user_by_id
 };
 
-pub async fn get_messages_by_chatid(chat_id: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn get_messages_by_chatid(typedb: String, chat_id: String) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("messages");
 
   let mut messages_result = coll
@@ -37,7 +37,7 @@ pub async fn get_messages_by_chatid(chat_id: String) -> Response {
       let mut messages_vec: Vec<MessageFull> = Vec::new();
       while messages_result.as_mut().unwrap().advance().await.unwrap() {
         let message_doc: Document = Document::try_from(messages_result.as_ref().unwrap().current()).unwrap();
-        let (_, chat): (Response, Option<Chat>) = get_chat_by_id(message_doc.get_str("chatId").unwrap().to_string()).await;
+        let (_, chat): (Response, Option<Chat>) = get_chat_by_id(typedb.clone(), message_doc.get_str("chatId").unwrap().to_string()).await;
         let (_, user): (Response, Option<UserData>) = get_user_by_id(message_doc.get_str("userId").unwrap().to_string()).await;
         let message: MessageFull = MessageFull {
           id: message_doc.get_str("id").unwrap().to_string(),
@@ -65,8 +65,8 @@ pub async fn get_messages_by_chatid(chat_id: String) -> Response {
   }
 }
 
-pub async fn send_message(message_form: Message) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn send_message(typedb: String, message_form: Message) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("messages");
 
   let message_doc = doc! {
@@ -81,7 +81,7 @@ pub async fn send_message(message_form: Message) -> Response {
     .insert_one(message_doc.clone())
     .await;
 
-  let result_update_chat = update_date(message_form.chatId.clone(), message_form.createdAt.clone())
+  let result_update_chat = update_date(typedb.clone(), message_form.chatId.clone(), message_form.createdAt.clone())
     .await;
 
   if result_update_chat.status == "error" {
@@ -105,7 +105,7 @@ pub async fn send_message(message_form: Message) -> Response {
       }
 
       let (_, chat_result): (Response, Option<Chat>) =
-        get_chat_by_id(message_form.chatId.clone()).await;
+        get_chat_by_id(typedb.clone(), message_form.chatId.clone()).await;
       let mut chat: Chat;
 
       if let Some(chat_data) = chat_result {
@@ -142,8 +142,8 @@ pub async fn send_message(message_form: Message) -> Response {
   }
 }
 
-pub async fn delete_messages(chatid: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn delete_messages(typedb: String, chatid: String) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("messages");
 
   let result = coll

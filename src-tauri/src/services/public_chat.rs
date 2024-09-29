@@ -22,8 +22,8 @@ use super::{
   users::get_user_by_id
 };
 
-pub async fn get_all_public_chats(userid: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn get_all_public_chats(typedb: String, userid: String) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("public_chats");
 
   let mut public_chats_result = coll
@@ -36,7 +36,7 @@ pub async fn get_all_public_chats(userid: String) -> Response {
       while public_chats_result.as_mut().unwrap().advance().await.unwrap() {
         let pub_chat_doc: Document = Document::try_from(public_chats_result.as_ref().unwrap().current()).unwrap();
         let (_, user): (Response, Option<UserData>) = get_user_by_id(pub_chat_doc.get_str("userId").unwrap().to_string().clone()).await;
-        let (_, chat): (Response, Option<Chat>) = get_chat_by_id(pub_chat_doc.get_str("chatId").unwrap().to_string().clone()).await;
+        let (_, chat): (Response, Option<Chat>) = get_chat_by_id(typedb.clone(), pub_chat_doc.get_str("chatId").unwrap().to_string().clone()).await;
         let pub_chat: PublicChatFull = PublicChatFull {
           id: pub_chat_doc.get_str("id").unwrap().to_string(),
           user: user.unwrap().clone(),
@@ -62,8 +62,8 @@ pub async fn get_all_public_chats(userid: String) -> Response {
   }
 }
 
-pub async fn add_public_chat(public_chat_form: PublicChat) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn add_public_chat(typedb: String, public_chat_form: PublicChat) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("public_chats");
 
   let public_chat_doc = doc! {
@@ -119,8 +119,8 @@ pub async fn add_public_chat(public_chat_form: PublicChat) -> Response {
   }
 }
 
-pub async fn delete_public_chat(id: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn delete_public_chat(typedb: String, id: String) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("public_chats");
 
   let result = coll
@@ -153,8 +153,8 @@ pub async fn delete_public_chat(id: String) -> Response {
   }
 }
 
-pub async fn delete_public_chat_by_chat_id(chatid: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn delete_public_chat_by_chat_id(typedb: String, chatid: String) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("public_chats");
 
   let result = coll

@@ -14,6 +14,7 @@ export class SharedLinksService {
 
   async getAllPublicChats(userId: string): Promise<Response> {
     const rawRes = (await invoke("get_all_public_chats", {
+      typedb: localStorage.getItem("typeDB") ?? "cloud",
       userid: userId,
     })) as string;
     return Response.fromJson(JSON.parse(rawRes), true);
@@ -21,6 +22,7 @@ export class SharedLinksService {
 
   async addPublicChat(publicChat: PublicChat): Promise<Response> {
     const rawRes = (await invoke("add_public_chat", {
+      typedb: localStorage.getItem("typeDB") ?? "cloud",
       publicChatFormRaw: JSON.stringify(publicChat),
     })) as string;
     return Response.fromJson(JSON.parse(rawRes));
@@ -28,6 +30,7 @@ export class SharedLinksService {
 
   async deletePublicChat(id: string): Promise<Response> {
     const rawRes = (await invoke("delete_public_chat", {
+      typedb: localStorage.getItem("typeDB") ?? "cloud",
       id: id,
     })) as string;
     return Response.fromJson(JSON.parse(rawRes));

@@ -23,7 +23,7 @@ use super::messages::{
 };
 use super::users::get_user_by_id;
 
-pub async fn ask_ai(chatid: String, message: String) -> Response {
+pub async fn ask_ai(typedb: String, chatid: String, message: String) -> Response {
   let (_, user_result): (Response, Option<UserData>) = get_user_by_id("80c9c4a6-9046-44e7-ba54-73d285ed8c78".to_string()).await;
   let mut user: UserData;
 
@@ -37,7 +37,7 @@ pub async fn ask_ai(chatid: String, message: String) -> Response {
     }
   }
 
-  let (_, chat_result): (Response, Option<Chat>) = get_chat_by_id(chatid.clone()).await;
+  let (_, chat_result): (Response, Option<Chat>) = get_chat_by_id(typedb.clone(), chatid.clone()).await;
   let mut chat: Chat;
 
   if let Some(chat_data) = chat_result {
@@ -50,7 +50,7 @@ pub async fn ask_ai(chatid: String, message: String) -> Response {
     }
   }
 
-  let messages_res: Response = get_messages_by_chatid(chatid.clone()).await;
+  let messages_res: Response = get_messages_by_chatid(typedb.clone(), chatid.clone()).await;
 
   let mut messages: Vec<MessageFull> = serde_json::from_str(&messages_res.data.as_str()).unwrap();
 
@@ -104,7 +104,7 @@ pub async fn ask_ai(chatid: String, message: String) -> Response {
     createdAt: format!("{}", chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.3fZ")),
   };
 
-  let save_message: Response = send_message(message_form.clone()).await;
+  let save_message: Response = send_message(typedb.clone(), message_form.clone()).await;
 
   if save_message.status == "error" {
     return save_message;

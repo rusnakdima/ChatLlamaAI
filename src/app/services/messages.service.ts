@@ -14,6 +14,7 @@ export class MessagesService {
 
   async getMessagesByChatId(chatId: string): Promise<Response> {
     const rawRes = (await invoke("get_messages_by_chatid", {
+      typedb: localStorage.getItem("typeDB") ?? "cloud",
       chatid: chatId,
     })) as string;
     return Response.fromJson(JSON.parse(rawRes), true);
@@ -21,6 +22,7 @@ export class MessagesService {
 
   async sendMessage(messageForm: Message): Promise<Response> {
     const rawRes = (await invoke("send_message", {
+      typedb: localStorage.getItem("typeDB") ?? "cloud",
       messageFormRaw: JSON.stringify(messageForm),
     })) as string;
     return Response.fromJson(JSON.parse(rawRes), true);
@@ -28,6 +30,7 @@ export class MessagesService {
 
   async askAI(chatId: string, message: string): Promise<Response> {
     const rawRes = (await invoke("ask_ai", {
+      typedb: localStorage.getItem("typeDB") ?? "cloud",
       chatid: chatId,
       message: message,
     })) as string;

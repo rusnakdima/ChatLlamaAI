@@ -18,8 +18,8 @@ use super::{
   public_chat::delete_public_chat_by_chat_id
 };
 
-pub async fn get_chats_by_userid(userid: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn get_chats_by_userid(typedb: String, userid: String) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("chats");
 
   let mut chats_result = coll
@@ -58,8 +58,8 @@ pub async fn get_chats_by_userid(userid: String) -> Response {
   }
 }
 
-pub async fn get_chat_by_id(chat_id: String) -> (Response, Option<Chat>) {
-  let database: Database = connect_db().await.unwrap();
+pub async fn get_chat_by_id(typedb: String, chat_id: String) -> (Response, Option<Chat>) {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("chats");
 
   let chat_result = coll
@@ -110,8 +110,8 @@ pub async fn get_chat_by_id(chat_id: String) -> (Response, Option<Chat>) {
   }
 }
 
-pub async fn create_chat(chat_form: Chat) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn create_chat(typedb: String, chat_form: Chat) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("chats");
 
   let chat_doc = doc! {
@@ -145,8 +145,8 @@ pub async fn create_chat(chat_form: Chat) -> Response {
   }
 }
 
-pub async fn rename_title_chat(chat_form: Chat) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn rename_title_chat(typedb: String, chat_form: Chat) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("chats");
   
   let chat_result = coll
@@ -197,8 +197,8 @@ pub async fn rename_title_chat(chat_form: Chat) -> Response {
   }
 }
 
-pub async fn update_date(chat_id: String, updated_at: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn update_date(typedb: String, chat_id: String, updated_at: String) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("chats");
 
   let chat_result = coll
@@ -249,8 +249,8 @@ pub async fn update_date(chat_id: String, updated_at: String) -> Response {
   }
 }
 
-pub async fn share_chat(chat_id: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn share_chat(typedb: String, chat_id: String) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("chats");
 
   let chat_result = coll
@@ -288,8 +288,8 @@ pub async fn share_chat(chat_id: String) -> Response {
   }
 }
 
-pub async fn close_chat(chat_id: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn close_chat(typedb: String, chat_id: String) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("chats");
 
   let chat_result = coll
@@ -327,21 +327,21 @@ pub async fn close_chat(chat_id: String) -> Response {
   }
 }
 
-pub async fn delete_chat(chat_id: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn delete_chat(typedb: String, chat_id: String) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("chats");
 
   let result = coll
     .delete_one(doc! { "id": chat_id.clone() })
     .await;
 
-  let result_del_messages = delete_messages(chat_id.clone()).await;
+  let result_del_messages = delete_messages(typedb.clone(), chat_id.clone()).await;
 
   if result_del_messages.status == "error" {
     return result_del_messages;
   }
 
-  let result_del_pub_chat = delete_public_chat_by_chat_id(chat_id.clone()).await;
+  let result_del_pub_chat = delete_public_chat_by_chat_id(typedb.clone(), chat_id.clone()).await;
 
   if result_del_pub_chat.status == "error" {
     return result_del_pub_chat;

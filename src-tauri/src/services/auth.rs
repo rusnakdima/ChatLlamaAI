@@ -17,7 +17,7 @@ use super::manage_token;
 use super::mongodb::connect_db;
 
 pub async fn login(auth_form: &AuthForm) -> Response {
-  let database: Database = connect_db().await.unwrap();
+  let database: Database = connect_db("cloud").await.unwrap();
   let coll: Collection<Document> = database.collection("users");
 
   let user_result = coll
@@ -79,7 +79,7 @@ pub async fn login(auth_form: &AuthForm) -> Response {
 }
 
 pub async fn signup(auth_form: &RegForm) -> Response {
-  let database: Database = connect_db().await.unwrap();
+  let database: Database = connect_db("cloud").await.unwrap();
   let coll: Collection<Document> = database.collection("users");
 
   let user_result = coll
@@ -133,7 +133,7 @@ pub async fn signup(auth_form: &RegForm) -> Response {
 }
 
 pub async fn reset_password(email: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+  let database: Database = connect_db("cloud").await.unwrap();
   let coll: Collection<Document> = database.collection("users");
 
   let user_result = coll
@@ -203,7 +203,7 @@ pub async fn reset_password(email: String) -> Response {
 }
 
 pub async fn check_token(username: String, token: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+  let database: Database = connect_db("cloud").await.unwrap();
   let coll: Collection<Document> = database.collection("users");
 
   let user_result = coll
@@ -258,7 +258,7 @@ pub async fn check_token(username: String, token: String) -> Response {
 }
 
 pub async fn change_password(username: String, password: String, token: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+  let database: Database = connect_db("cloud").await.unwrap();
   let coll: Collection<Document> = database.collection("users");
 
   let user_result = coll
