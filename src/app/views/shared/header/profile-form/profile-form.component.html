@@ -1,0 +1,22 @@
+<div class="styleBackWind">
+  <div class="styleWind !p-0">
+    <div class="flex flex-col p-5 !rounded-none styleBorderSolidLite border-b">
+      <span class="text-xl">Avatar Change Form</span>
+    </div>
+
+    <div class="flex flex-col gap-y-3 p-5">
+      <label class="styleLabel">URL to image</label>
+      <input class="styleField" type="text" [value]="user?.image" (keyup)="changeImg($event)">
+      <img class="w-[150px]" [src]="user?.image ?? ''" />
+    </div>
+
+    <div class="flex flex-row justify-end gap-x-5 p-5 styleBorderSolid border-t">
+      <button class="styleButDanger" (click)="closeWindowEvent.next('')">Close</button>
+      <button class="styleButInfo" (click)="onSubmit()">Submit</button>
+    </div>
+  </div>
+</div>
+
+<app-window-notify
+  [dataNotify]="dataNotify"
+></app-window-notify>
