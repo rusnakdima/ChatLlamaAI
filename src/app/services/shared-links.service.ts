@@ -12,8 +12,8 @@ import { PublicChat } from "@models/public_chat";
 export class SharedLinksService {
   constructor() {}
 
-  async getAllPublicChats(userId: string): Promise<Response> {
-    const rawRes = (await invoke("get_all_public_chats", {
+  async getPublicChatsByUserId(userId: string): Promise<Response> {
+    const rawRes = (await invoke("get_public_chats_by_userid", {
       typedb: localStorage.getItem("typeDB") ?? "cloud",
       userid: userId,
     })) as string;

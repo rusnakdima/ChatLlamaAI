@@ -22,7 +22,7 @@ use super::{
   users::get_user_by_id
 };
 
-pub async fn get_all_public_chats(typedb: String, userid: String) -> Response {
+pub async fn get_public_chats_by_userid(typedb: String, userid: String) -> Response {
   let database: Database = connect_db(&typedb).await.unwrap();
   let coll: Collection<Document> = database.collection("public_chats");
 
@@ -41,6 +41,44 @@ pub async fn get_all_public_chats(typedb: String, userid: String) -> Response {
           id: pub_chat_doc.get_str("id").unwrap().to_string(),
           user: user.unwrap().clone(),
           chat: chat.unwrap().clone(),
+          createdAt: pub_chat_doc.get_str("createdAt").unwrap().to_string(),
+        };
+        public_chats_vec.push(pub_chat);
+      }
+
+      return Response {
+        status: "success".to_string(),
+        message: "".to_string(),
+        data: serde_json::to_string(&public_chats_vec.clone()).unwrap(),
+      };
+    }
+    Err(e) => {
+      return Response {
+        status: "error".to_string(),
+        message: format!("Error: {}", e),
+        data: "".to_string(),
+      };
+    }
+  }
+}
+
+pub async fn get_public_chats_by_userid_for_ie(typedb: String, userid: String) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
+  let coll: Collection<Document> = database.collection("public_chats");
+
+  let mut public_chats_result = coll
+    .find(doc! { "userId": userid })
+    .await;
+
+  match public_chats_result {
+    Ok(_) => {
+      let mut public_chats_vec: Vec<PublicChat> = Vec::new();
+      while public_chats_result.as_mut().unwrap().advance().await.unwrap() {
+        let pub_chat_doc: Document = Document::try_from(public_chats_result.as_ref().unwrap().current()).unwrap();
+        let pub_chat: PublicChat = PublicChat {
+          id: pub_chat_doc.get_str("id").unwrap().to_string(),
+          userId: pub_chat_doc.get_str("userId").unwrap().to_string(),
+          chatId: pub_chat_doc.get_str("chatId").unwrap().to_string(),
           createdAt: pub_chat_doc.get_str("createdAt").unwrap().to_string(),
         };
         public_chats_vec.push(pub_chat);
@@ -113,6 +151,39 @@ pub async fn add_public_chat(typedb: String, public_chat_form: PublicChat) -> Re
       return Response {
         status: "error".to_string(),
         message: format!("Error: {}", e),
+        data: "".to_string(),
+      };
+    }
+  }
+}
+
+pub async fn import_export_public_chat(typedb: String, public_chat_form: PublicChat) -> Response {
+  let database: Database = connect_db(&typedb).await.unwrap();
+  let coll: Collection<Document> = database.collection("public_chats");
+
+  let public_chat_doc = doc! {
+    "id": public_chat_form.id.clone(),
+    "userId": public_chat_form.userId.clone(),
+    "chatId": public_chat_form.chatId.clone(),
+    "createdAt": public_chat_form.createdAt.clone(),
+  };
+
+  let insert_result = coll
+    .insert_one(public_chat_doc.clone())
+    .await;
+
+  match insert_result {
+    Ok(_) => {
+      return Response {
+        status: "success".to_string(),
+        message: "Public chat added successfully!".to_string(),
+        data: "".to_string(),
+      };
+    }
+    Err(e) => {
+      return Response {
+        status: "error".to_string(),
+        message: format!("Error inserting public chat: {}", e),
         data: "".to_string(),
       };
     }

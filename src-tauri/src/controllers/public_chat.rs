@@ -1,13 +1,15 @@
 /* models */
-use crate::{
-  models::{public_chat::PublicChat, response::Response},
-  services
+use crate::models::{
+  public_chat::PublicChat,
+  response::Response
 };
 
+/* services */
+use crate::services;
 
 #[tauri::command]
-pub async fn get_all_public_chats(typedb: String, userid: String) -> String {
-  let res: Response = services::public_chat::get_all_public_chats(typedb, userid).await;
+pub async fn get_public_chats_by_userid(typedb: String, userid: String) -> String {
+  let res: Response = services::public_chat::get_public_chats_by_userid(typedb, userid).await;
   format!("{}", serde_json::to_string(&res).unwrap())
 }
 

@@ -122,7 +122,7 @@ export class SharedLinksComponent implements OnInit {
     this.isLoading = true;
 
     this.sharedLinksService
-      .getAllPublicChats(this.userId)
+      .getPublicChatsByUserId(this.userId)
       .then((data: Response) => {
         this.dataNotify.next({ status: data.status, text: data.message });
         if (data.status === "success") {
