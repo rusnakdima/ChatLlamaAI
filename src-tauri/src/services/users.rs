@@ -15,11 +15,12 @@ use crate::models::{
 /* services */
 use super::{
   chats::get_chats_by_userid,
+  manage_token,
   mongodb::connect_db
 };
 
 pub async fn get_user_by_id(userid: String) -> (Response, Option<UserData>) {
-  let database: Database = connect_db().await.unwrap();
+  let database: Database = connect_db("cloud").await.unwrap();
   let coll: Collection<Document> = database.collection("users");
 
   let user_result = coll
@@ -63,15 +64,15 @@ pub async fn get_user_by_id(userid: String) -> (Response, Option<UserData>) {
         },
         None
       )
-    },
+    }
   }
 }
 
-pub async fn get_users_by_chats(userid: String) -> Response {
-  let database: Database = connect_db().await.unwrap();
+pub async fn get_users_by_chats(typedb: String, userid: String) -> Response {
+  let database: Database = connect_db("cloud").await.unwrap();
   let coll: Collection<Document> = database.collection("users");
 
-  let result_chats = get_chats_by_userid(userid).await;
+  let result_chats = get_chats_by_userid(typedb, userid).await;
 
   if result_chats.status == "error" {
     return result_chats;
@@ -121,5 +122,45 @@ pub async fn get_users_by_chats(userid: String) -> Response {
     status: "success".to_string(),
     message: "".to_string(),
     data: serde_json::to_string(&list_profiles).unwrap(),
+  }
+}
+
+pub async fn update_user_image(user_form: UserData) -> Response {
+  let database: Database = connect_db("cloud").await.unwrap();
+  let coll: Collection<Document> = database.collection("users");
+
+  let user_result = coll
+    .find_one(doc! { "id": user_form.id.clone() })
+    .await;
+
+  match user_result {
+    Ok(user) => {
+      if user.is_some() {
+        let _ = coll.update_one(
+          doc! { "id": user_form.id.clone() },
+          doc! { "$set": { "image": user_form.image.clone() } },
+        );
+        let token = manage_token::create(user_form.clone());
+
+        return Response {
+          status: "success".to_string(),
+          message: "".to_string(),
+          data: token.unwrap(),
+        };
+      } else {
+        return Response {
+          status: "error".to_string(),
+          message: "User not found!".to_string(),
+          data: "".to_string(),
+        };
+      }
+    }
+    Err(_) => {
+      return Response {
+        status: "error".to_string(),
+        message: "Error!".to_string(),
+        data: "".to_string(),
+      };
+    },
   }
 }
