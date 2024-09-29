@@ -16,6 +16,8 @@ import { ResetPasswordComponent } from "@views/reset-password/reset-password.com
 import { ChatComponent } from "@views/chat/chat.component";
 import { SharedLinksComponent } from "@views/shared-links/shared-links.component";
 
+import { SettingsComponent } from "@views/settings/settings.component";
+
 export const routes: Routes = [
   { path: '', component: HomeComponent, title: 'Home', canActivate: [canActivateAuth] },
   { path: 'about', component: AboutComponent, title: 'About', canActivate: [canActivateAuth] },
@@ -27,5 +29,7 @@ export const routes: Routes = [
 
   { path: 'chat/:id', component: ChatComponent, title: 'Chat', canActivate: [canActivateAuth] },
   { path: 'shared_links', component: SharedLinksComponent, title: 'Shared Links', canActivate: [canActivateAuth] },
+
+  { path: 'settings', component: SettingsComponent, title: 'Settings', canActivate: [canActivateAuth] },
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
