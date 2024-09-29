@@ -1,0 +1,20 @@
+<div class="flex flex-col gap-y-5 m-5">
+  <div class="flex flex-row gap-x-3 items-center pb-2 !rounded-none styleBorderSolidLite border-b">
+    <div class="styleFloatBut" (click)="back()">
+      <ion-icon class="!text-2xl" name="arrow-back-outline" />
+    </div>
+    <span>Setting</span>
+  </div>
+
+  <div class="flex flex-col gap-y-5">
+    <div class="flex flex-col gap-y-3">
+      <span>The database used</span>
+      <label class="inline-flex flex-row gap-x-3 items-center cursor-pointer">
+        <input type="checkbox" [checked]="typeDB == 'cloud'" class="sr-only peer" (change)="changeType($event)">
+        <span class="styleLabel" for="db">Local</span>
+        <div class="styleToggle"></div>
+        <span class="styleLabel" for="db">Cloud</span>
+      </label>
+    </div>
+  </div>
+</div>
