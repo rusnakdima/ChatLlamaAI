@@ -36,8 +36,8 @@ export class WindowNotifyComponent {
       } else {
         return;
       }
-      this.text = value.text;
       if (value.text != "") {
+        this.text = value.text;
         this.alertNotify();
       }
     });
