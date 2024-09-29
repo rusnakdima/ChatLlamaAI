@@ -24,4 +24,11 @@ export class UsersService {
     })) as string;
     return Response.fromJson(JSON.parse(rawRes), true);
   }
+
+  async updateUserImage(userForm: any): Promise<Response> {
+    const rawRes = (await invoke("update_user_image", {
+      userFormRaw: JSON.stringify(userForm),
+    })) as string;
+    return Response.fromJson(JSON.parse(rawRes), true);
+  }
 }

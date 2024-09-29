@@ -21,6 +21,14 @@
           <span class="text-gray-700 dark:text-gray-400">{{role}}</span>
         </div>
         <hr class="my-2 styleBorderSolidLite border" />
+        <div class="styleLinkMenu" (click)="isShowProfileWind = true">
+          <ion-icon class="!text-2xl" name="person-outline" />
+          <span>Profile</span>
+        </div>
+        <div class="styleLinkMenu" [routerLink]="['/settings']">
+          <ion-icon class="!text-2xl" name="settings-outline" />
+          <span>Settings</span>
+        </div>
         <div class="styleLinkMenu" [routerLink]="['/shared_links']">
           <ion-icon class="!text-2xl" name="share-social-outline" />
           <span>Shared Links</span>
@@ -33,3 +41,10 @@
     </mat-menu>
   </div>
 </div>
+
+@if (isShowProfileWind) {
+  <app-profile-form
+    (submitEvent)="isShowProfileWind = false"
+    (closeWindowEvent)="isShowProfileWind = false"
+  ></app-profile-form>
+}

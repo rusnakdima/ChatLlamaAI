@@ -9,11 +9,14 @@ import { MatMenuModule } from '@angular/material/menu';
 /* services */
 import { AuthService } from '@services/auth.service';
 
+/* components */
+import { ProfileFormComponent } from "./profile-form/profile-form.component";
+
 @Component({
   selector: 'app-header',
   standalone: true,
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  imports: [CommonModule, RouterModule, MatMenuModule],
+  imports: [CommonModule, RouterModule, MatMenuModule, ProfileFormComponent],
   templateUrl: './header.component.html'
 })
 export class HeaderComponent {
@@ -30,6 +33,7 @@ export class HeaderComponent {
   image: string = '';
 
   isShowNav: boolean = false;
+  isShowProfileWind: boolean = false;
 
   ngOnInit(): void {
     this.themeVal = localStorage.getItem('theme') ?? '';
