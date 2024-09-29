@@ -1,3 +1,5 @@
+pub mod mongodb;
+
 pub mod about;
 
 pub mod auth;

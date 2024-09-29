@@ -7,6 +7,10 @@ use controllers::about::{
     get_binary_name_file
 };
 
+use controllers::mongodb::{
+    check_local_db
+};
+
 use controllers::auth::{
     login,
     signup,
@@ -40,7 +44,8 @@ use controllers::ai::ask_ai;
 
 use controllers::users::{
     get_user_by_id,
-    get_users_by_chats
+    get_users_by_chats,
+    update_user_image
 };
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -48,6 +53,8 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
+            check_local_db,
+
             login,
             signup,
             reset_password,
@@ -75,7 +82,8 @@ pub fn run() {
             ask_ai,
 
             get_user_by_id,
-            get_users_by_chats
+            get_users_by_chats,
+            update_user_image
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
