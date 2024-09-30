@@ -62,28 +62,26 @@ export class AppComponent implements OnInit {
         );
       });
 
-    if (!localStorage.getItem("typeDB")) {
-      this.mongodbService
-        .checkLocalDB()
-        .then((data: Response) => {
-          if (data.status == "success") {
-            localStorage.setItem("typeDB", "local");
-          } else {
-            localStorage.setItem("typeDB", "cloud");
-          }
-        })
-        .catch((err) => {
-          console.error(err);
-          this.dataNotify.next({
-            status: "error",
-            text: `${
-              this.role === "admin"
-                ? err.status + " — " + err.message
-                : "Server error!"
-            }`,
-          });
+    this.mongodbService
+      .checkLocalDB()
+      .then((data: Response) => {
+        if (data.status == "success") {
+          localStorage.setItem("typeDB", "local");
+        } else {
+          localStorage.setItem("typeDB", "cloud");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        this.dataNotify.next({
+          status: "error",
+          text: `${
+            this.role === "admin"
+              ? err.status + " — " + err.message
+              : "Server error!"
+          }`,
         });
-    }
+      });
   }
 
   showNav(value: boolean): void {

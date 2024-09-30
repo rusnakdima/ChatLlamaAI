@@ -1,5 +1,13 @@
+
 /* sys lib */
-use mongodb::{error::Error, Client, Database};
+use std::time::Duration;
+use mongodb::{
+  error::Error,
+  options::ClientOptions,
+  Client,
+  Database,
+  bson::doc
+};
 
 /* models */
 use crate::models::{
@@ -27,13 +35,18 @@ pub async fn connect_db(typedb: &str) -> Result<Database, Error> {
     mongodb_uri = "mongodb://127.0.0.1:27017/ChatLlamaAI";
   }
 
-  println!("typedb: {}; mongodbutl: {}", typedb.clone(), mongodb_uri.clone());
+  let mut client_options = ClientOptions::parse(mongodb_uri).await?;
 
-  let client_result = Client::with_uri_str(mongodb_uri).await;
+  client_options.connect_timeout = Some(Duration::from_millis(4000));
+  client_options.server_selection_timeout = Some(Duration::from_millis(4000));
 
-  match client_result {
-    Ok(client) => {
-      let database = client.database("ChatLlamaAI");
+  let client = Client::with_options(client_options).unwrap();
+
+  let database = client.database("ChatLlamaAI");
+  let check_connect = database.run_command( doc! { "ping": 1 } ).await;
+
+  match check_connect {
+    Ok(_) => {
       Ok(database)
     }
     Err(error) => {
