@@ -8,7 +8,9 @@ use controllers::about::{
 };
 
 use controllers::mongodb::{
-    check_local_db
+    check_local_db,
+    import,
+    export
 };
 
 use controllers::auth::{
@@ -35,7 +37,7 @@ use controllers::messages::{
 };
 
 use controllers::public_chat::{
-    get_all_public_chats,
+    get_public_chats_by_userid,
     add_public_chat,
     delete_public_chat
 };
@@ -54,6 +56,8 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
             check_local_db,
+            import,
+            export,
 
             login,
             signup,
@@ -75,7 +79,7 @@ pub fn run() {
             get_messages_by_chatid,
             send_message,
 
-            get_all_public_chats,
+            get_public_chats_by_userid,
             add_public_chat,
             delete_public_chat,
 
