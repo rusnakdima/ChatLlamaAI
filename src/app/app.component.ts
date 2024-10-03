@@ -49,7 +49,7 @@ export class AppComponent implements OnInit {
     const theme = localStorage.getItem("theme") ?? "";
     document.querySelector("html")!.setAttribute("class", theme);
 
-    this.role = this.authService.getValueByKey('role') ?? 'user';
+    this.role = this.authService.getValueByKey("role") ?? "user";
 
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -62,26 +62,30 @@ export class AppComponent implements OnInit {
         );
       });
 
-    this.mongodbService
-      .checkLocalDB()
-      .then((data: Response) => {
-        if (data.status == "success") {
-          localStorage.setItem("typeDB", "local");
-        } else {
-          localStorage.setItem("typeDB", "cloud");
-        }
-      })
-      .catch((err) => {
-        console.error(err);
-        this.dataNotify.next({
-          status: "error",
-          text: `${
-            this.role === "admin"
-              ? err.status + " — " + err.message
-              : "Server error!"
-          }`,
+    if (!localStorage.getItem("typeDB")) {
+      this.mongodbService
+        .checkLocalDB()
+        .then((data: Response) => {
+          let tempType = "";
+          if (data.status == "success") {
+            tempType = "local";
+          } else {
+            tempType = "cloud";
+          }
+          localStorage.setItem("typeDB", tempType);
+        })
+        .catch((err) => {
+          console.error(err);
+          this.dataNotify.next({
+            status: "error",
+            text: `${
+              this.role === "admin"
+                ? err.status + " — " + err.message
+                : "Server error!"
+            }`,
+          });
         });
-      });
+    }
   }
 
   showNav(value: boolean): void {
