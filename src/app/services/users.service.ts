@@ -29,6 +29,6 @@ export class UsersService {
     const rawRes = (await invoke("update_user_image", {
       userFormRaw: JSON.stringify(userForm),
     })) as string;
-    return Response.fromJson(JSON.parse(rawRes), true);
+    return Response.fromJson(JSON.parse(rawRes));
   }
 }
