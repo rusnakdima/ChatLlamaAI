@@ -241,7 +241,7 @@ export class SharedLinksComponent implements OnInit {
     );
   }
 
-  onTableDataChange(event: any) {
+  onChangeCountPage(event: any) {
     this.page = event;
   }
 
