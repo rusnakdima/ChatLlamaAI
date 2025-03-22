@@ -35,12 +35,7 @@ pub async fn connect_db(typedb: &str) -> Result<Database, Error> {
     mongodb_uri = "mongodb://127.0.0.1:27017/ChatLlamaAI";
   }
 
-  let mut client_options = ClientOptions::parse(mongodb_uri).await?;
-
-  client_options.connect_timeout = Some(Duration::from_millis(4000));
-  client_options.server_selection_timeout = Some(Duration::from_millis(4000));
-
-  let client = Client::with_options(client_options).unwrap();
+  let client = Client::with_uri_str(mongodb_uri).await.unwrap();
 
   let database = client.database("ChatLlamaAI");
   let check_connect = database.run_command( doc! { "ping": 1 } ).await;

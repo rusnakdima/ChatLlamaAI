@@ -1,6 +1,6 @@
 {
   "productName": "chatllamaai",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "identifier": "com.tcs.chatllamaai",
   "build": {
     "beforeDevCommand": "pnpm start",
